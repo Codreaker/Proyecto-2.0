@@ -8,6 +8,8 @@ Nave=3
 puntaje=0
 nombre=""
 minutos=0
+minutos_nivel_dos = 0
+minutos_nivel_tres = 0
 
 # clase donde estara el juego con ambas ventanas
 class Pantalla_principal:
@@ -175,13 +177,14 @@ class Pantalla_principal:
     def cronometro_N1(self):
         global minutos
         if self.segundos == 60:
-            minutos=1
-            self.jefe_derrotado()
+            minutos+=1
             self.segundos=0
+            self.jefe_derrotado()
+            
             self.tiempo_nivel1.configure(text="tiempo: "+ str(minutos)+":"+str(self.segundos))#actualiza el tiempo
         self.tiempo_nivel1.configure(text="tiempo: "+str(minutos)+":"+ str(self.segundos))#actualiza el tiempo
-        self.segundos +=1
-        self.canvas.after(1000, self.cronometro_N1)#repite la funcion cada segundo
+        self.segundos += 1
+        self.canvas.after(10, self.cronometro_N1)#repite la funcion cada segundo
 
 
         self.master.bind("<KeyRelease>", self.disparo_nave)#para evento discontinuo de teclas
@@ -204,7 +207,7 @@ class Pantalla_principal:
             #obtiene las coordenadas de la nave y crea la bala en esa posicion
             self.x = self.canvas.coords(self.nave_N1)[0]
             self.y = self.canvas.coords(self.nave_N1)[1]
-            bala_nave = self.canvas.create_image(self.x+15,self.y,image=self.bala_nave, anchor=NW)
+            bala_nave = self.canvas.create_image(self.x+13,self.y,image=self.bala_nave, anchor=NW)
             self.disparo_nave_aux(bala_nave)#llama a la funcion de movimiento de la bala de la nave
 
 
@@ -253,7 +256,7 @@ class Pantalla_principal:
 
         #importa img de las balas de la nave y el enemigo
         self.bala_nave2=ImageTk.PhotoImage(Image.open("Fire1.gif"))
-        self.misil_jefe2=ImageTk.PhotoImage(Image.open("Missile1.gif"))
+   
 
         #variable y llamada a la funcion de cronometro
         self.segundos2=0
@@ -266,9 +269,9 @@ class Pantalla_principal:
 
     #cronometro 
     def iniciar2(self):
-        global minutos
+        global minutos_nivel_dos
         if self.segundos2 == 60:
-            minutos=1
+            minutos_nivel_dos=1
             self.jefe_derrotado()
             self.segundos2=0
             self.tiempo_nivel2.configure(text="tiempo: "+ str(minutos)+":"+str(self.segundos2))#actualiza el tiempo
@@ -354,10 +357,10 @@ class Pantalla_principal:
 
     #cuenta el tiempo
     def cronometro_N3(self):
-        global minutos
+        global minutos_nivel_tres
         if self.segundos_N3 == 60:#verifica si se llego a 60 segundos
             
-            minutos +=1#aumenta en 1 los minutos
+            minutos_nivel_tres +=1#aumenta en 1 los minutos
             self.jefe_derrotado()
             self.segundos_N3=0
             self.tiempo_N3.configure(text="tiempo "+ str(minutos)+":"+str(self.segundos_N3))#actualiza los minutos y segundos
@@ -400,6 +403,8 @@ class Pantalla_principal:
         global Nave
         global nombre
         global minutos
+        global minutos_nivel_dos
+        global minutos_nivel_tres
         
         if minutos == 1:#verifica el nivel 1
             self.bonus()
@@ -408,14 +413,14 @@ class Pantalla_principal:
             self.segundoNivel()
             self.nombreJugador_N2.configure(text=nombre)
      
-        if minutos == 1:#verifica el nivel 2
+        if minutos_nivel_dos == 1:#verifica el nivel 2
             self.bonus()
             self.canvas.destroy()
             time.sleep(1)
             self.tercerNivel()
             self.nombreJugador_N3.configure(text=nombre)
             
-        if minutos == 1:#verifica el nivel 3
+        if minutos_nivel_tres == 1:#verifica el nivel 3
             self.bonus()
             self.canvas.destroy()
             time.sleep(1)
@@ -426,6 +431,12 @@ class Pantalla_principal:
         global minutos
         global puntaje
         global Nave
+        global minutos_nivel_dos
+        global minutos_nivel_tres
+        if minutos_nivel_tres==0:
+            puntaje +=20
+        if minutos_nivel_dos==0:
+            puntaje +=20
         if minutos==0:
             puntaje +=20
         if Nave==3:
@@ -446,11 +457,15 @@ class Pantalla_principal:
         global puntaje
         global minutos
         global nombre
+        global minutos_nivel_dos
+        global minutos_nivel_tres
         
         
         if Nave < 3: #verifica y restablece la vida de la nave
             Nave=3
         puntaje=0#restablece el puntaje
+        minutos_nivel_dos = 0
+        minutos_nivel_tres = 0
         minutos=0
         nombre=""
         self.canvas.destroy()
