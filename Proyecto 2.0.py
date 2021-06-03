@@ -179,9 +179,8 @@ class Pantalla_principal:
         if self.segundos == 60:
             minutos+=1
             self.segundos=0
-            self.jefe_derrotado()
-            
             self.tiempo_nivel1.configure(text="tiempo: "+ str(minutos)+":"+str(self.segundos))#actualiza el tiempo
+            return self.jefe_derrotado()
         self.tiempo_nivel1.configure(text="tiempo: "+str(minutos)+":"+ str(self.segundos))#actualiza el tiempo
         self.segundos += 1
         self.canvas.after(10, self.cronometro_N1)#repite la funcion cada segundo
@@ -271,13 +270,13 @@ class Pantalla_principal:
     def iniciar2(self):
         global minutos_nivel_dos
         if self.segundos2 == 60:
-            minutos_nivel_dos=1
-            self.jefe_derrotado()
+            minutos_nivel_dos += 1
             self.segundos2=0
-            self.tiempo_nivel2.configure(text="tiempo: "+ str(minutos)+":"+str(self.segundos2))#actualiza el tiempo
-        self.tiempo_nivel2.configure(text="tiempo: "+ str(minutos)+":"+str(self.segundos2))#actualiza el tiempo
+            self.tiempo_nivel2.configure(text="tiempo: "+ str(minutos_nivel_dos)+":"+str(self.segundos2))#actualiza el tiempo
+            return self.jefe_derrotado()
+        self.tiempo_nivel2.configure(text="tiempo: "+ str(minutos_nivel_dos)+":"+str(self.segundos2))#actualiza el tiempo
         self.segundos2 +=1
-        self.canvas.after(1000, self.iniciar2)#repite el proceso cada segundo
+        self.canvas.after(100, self.iniciar2)#repite el proceso cada segundo
             
 
     #verifica la tecla presionada
@@ -359,12 +358,11 @@ class Pantalla_principal:
     def cronometro_N3(self):
         global minutos_nivel_tres
         if self.segundos_N3 == 60:#verifica si se llego a 60 segundos
-            
             minutos_nivel_tres +=1#aumenta en 1 los minutos
-            self.jefe_derrotado()
             self.segundos_N3=0
-            self.tiempo_N3.configure(text="tiempo "+ str(minutos)+":"+str(self.segundos_N3))#actualiza los minutos y segundos
-        self.tiempo_N3.configure(text="tiempo "+ str(minutos)+":"+str(self.segundos_N3))#actualiza los segundos
+            self.tiempo_N3.configure(text="tiempo "+ str(minutos_nivel_tres)+":"+str(self.segundos_N3))#actualiza los minutos y segundos
+            return self.jefe_derrotado()
+        self.tiempo_N3.configure(text="tiempo "+ str(minutos_nivel_tres)+":"+str(self.segundos_N3))#actualiza los segundos
         self.segundos_N3 +=1
         self.canvas.after(1000, self.cronometro_N3)#repite la funcion cada 1 segundo
         
