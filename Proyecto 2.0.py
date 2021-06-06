@@ -178,7 +178,7 @@ class Pantalla_principal:
 
         #importa y coloca la img de la nave
         self.Nave=ImageTk.PhotoImage(Image.open("nave.png"))
-        self.nave_N1 = self.canvas.create_image(250,450,image=self.Nave, anchor=NW)
+        self.nave_N1 = self.canvas.create_image(250,402,image=self.Nave, anchor=NW)
 
         self.vidanave = Label(self.canvas, text="Vida: " + str(Nave), font=("Helvetica", 9), fg="#f55cdf", bg="#1d2086")
         self.vidanave.place(x=0, y=130)
@@ -257,11 +257,11 @@ class Pantalla_principal:
 
         #verifica las teclas y realiza el movimiento de la nave
         def movimiento_nave(mover):
-            if mover.keysym=='Right' and self.canvas.coords(self.nave_N1)[0]<760:#derecha
+            if mover.keysym=='Right' and self.canvas.coords(self.nave_N1)[0]<745:#derecha
                 self.canvas.move(self.nave_N1, 8, 0)
-            if mover.keysym=='Left' and self.canvas.coords(self.nave_N1)[0]>5:#izquierda
+            if mover.keysym=='Left' and self.canvas.coords(self.nave_N1)[0]>0:#izquierda
                 self.canvas.move(self.nave_N1, -8, 0)   
-            if mover.keysym=='Down' and self.canvas.coords(self.nave_N1)[1]<450:#abajo
+            if mover.keysym=='Down' and self.canvas.coords(self.nave_N1)[1]<405:#abajo
                 self.canvas.move(self.nave_N1, 0, 8)
             if mover.keysym=='Up' and self.canvas.coords(self.nave_N1)[1]>0:#arriba
                 self.canvas.move(self.nave_N1, 0, -8)
@@ -336,7 +336,7 @@ class Pantalla_principal:
 
         #importa img de la nave
         self.Nave2=ImageTk.PhotoImage(Image.open("nave.png"))
-        self.nave_N2 = self.canvas.create_image(250,450,image=self.Nave2, anchor=NW)
+        self.nave_N2 = self.canvas.create_image(250,402,image=self.Nave2, anchor=NW)
 
         #importa img de las balas de la nave y el enemigo
         self.bala_nave2=ImageTk.PhotoImage(Image.open("Fire1.gif"))
@@ -383,11 +383,11 @@ class Pantalla_principal:
                 
         #verifica las teclas y realiza el movimiento de la nave
         def mover_nave_2(mover):
-            if mover.keysym=='Right' and self.canvas.coords(self.nave_N2)[0]<594:#derecha
+            if mover.keysym=='Right' and self.canvas.coords(self.nave_N2)[0]<745:#derecha
                 self.canvas.move(self.nave_N2, 15, 0)
             if mover.keysym=='Left' and self.canvas.coords(self.nave_N2)[0]>0:#izquierda
                 self.canvas.move(self.nave_N2, -15, 0)   
-            if mover.keysym=='Down' and self.canvas.coords(self.nave_N2)[1]<680:#abajo
+            if mover.keysym=='Down' and self.canvas.coords(self.nave_N2)[1]<405:#abajo
                 self.canvas.move(self.nave_N2, 0, 15)
             if mover.keysym=='Up' and self.canvas.coords(self.nave_N2)[1]>0:#arriba
                 self.canvas.move(self.nave_N2, 0, -15)
@@ -443,7 +443,7 @@ class Pantalla_principal:
 
         #importa imagen de la nave del nivel 3
         self.nave_N3_img=ImageTk.PhotoImage(Image.open("nave.png"))
-        self.nave_N3 = self.canvas.create_image(250,450,image=self.nave_N3_img, anchor=NW)#coloca la imagen en la ventana
+        self.nave_N3 = self.canvas.create_image(250,405,image=self.nave_N3_img, anchor=NW)#coloca la imagen en la ventana
 
 
         self.bala_nave_3 = ImageTk.PhotoImage(Image.open("Fire1.gif"))#importa imagen de la bala de la nave
@@ -487,11 +487,11 @@ class Pantalla_principal:
                 self.canvas.delete(bala_nave_3)#elimina la bala cuando llega al limite superior
                 
         def mover_nave3(mover):
-            if mover.keysym=='Right' and self.canvas.coords(self.nave_N3)[0]<594:#se mueve a la derecha hasta el limite
+            if mover.keysym=='Right' and self.canvas.coords(self.nave_N3)[0]<745:#se mueve a la derecha hasta el limite
                 self.canvas.move(self.nave_N3, 8, 0)
             if mover.keysym=='Left' and self.canvas.coords(self.nave_N3)[0]>0:#se mueve a la izquierda hasta el limite
                 self.canvas.move(self.nave_N3, -8, 0)   
-            if mover.keysym=='Down' and self.canvas.coords(self.nave_N3)[1]<680:#se mueve abajo hasta el limite
+            if mover.keysym=='Down' and self.canvas.coords(self.nave_N3)[1]<405:#se mueve abajo hasta el limite
                 self.canvas.move(self.nave_N3, 0, 8)
             if mover.keysym=='Up' and self.canvas.coords(self.nave_N3)[1]>0:#se mueve arriba hasta el limite
                 self.canvas.move(self.nave_N3, 0, -8)
