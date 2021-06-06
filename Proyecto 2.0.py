@@ -158,7 +158,7 @@ class Pantalla_principal:
         
         def animate(counter):
             self.canvas.itemconfig(self.image, image=self.sequence[counter])
-            self.canvas.after(20, lambda: animate((counter+1) % len(self.sequence)))
+            self.canvas.after(100, lambda: animate((counter+1) % len(self.sequence)))
         animate(1)
         #tiempo nivel 1
         self.tiempo_nivel1 = Label(self.canvas, text="tiempo",font=("Comic Sans MS", 9),fg="red",bg="#1d2086")
@@ -302,8 +302,16 @@ class Pantalla_principal:
         global puntaje
         self.canvas = Canvas(self.master, width=796, height=500, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
-        self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
-        self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
+        self.sequence = [ImageTk.PhotoImage(img)
+                            for img in ImageSequence.Iterator(
+                                    Image.open(
+                                    r'clockword.gif'))]
+        self.image = self.canvas.create_image(400,250, image=self.sequence[0])
+        
+        def animate(counter):
+            self.canvas.itemconfig(self.image, image=self.sequence[counter])
+            self.canvas.after(100, lambda: animate((counter+1) % len(self.sequence)))
+        animate(1)
 
 
         #boton de retorno a la pantalla de inicio
@@ -401,8 +409,16 @@ class Pantalla_principal:
         global no_dispare#global para detener el disparo del enemigo
         self.canvas = Canvas(self.master, width=796, height=500, relief='ridge',bg="#1d2086")
         self.canvas.place(x=0, y=0)
-        self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
-        self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
+        self.sequence = [ImageTk.PhotoImage(img)
+                            for img in ImageSequence.Iterator(
+                                    Image.open(
+                                    r'wow.gif'))]
+        self.image = self.canvas.create_image(400,250, image=self.sequence[0])
+        
+        def animate(counter):
+            self.canvas.itemconfig(self.image, image=self.sequence[counter])
+            self.canvas.after(120, lambda: animate((counter+1) % len(self.sequence)))
+        animate(1)
 
 
         #boton para regresar a pantalla de inicio
