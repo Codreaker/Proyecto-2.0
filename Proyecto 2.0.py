@@ -1,15 +1,20 @@
 from tkinter import *
-from random import randint
-from PIL import ImageTk,Image
+from tkinter.ttk import Progressbar
+from random import *
+from PIL import Image, ImageTk, ImageSequence
+from threading import Thread
 import time
 
 
-Nave=3
-puntaje=0
-nombre=""
+Nave = 3
+puntaje = 0
+nombre = ""
 minutos=0
 minutos_nivel_dos = 0
 minutos_nivel_tres = 0
+parar = True
+xspeed = 1 
+yspeed = 4
 
 # clase donde estara el juego con ambas ventanas
 class Pantalla_principal:
@@ -17,12 +22,12 @@ class Pantalla_principal:
         self.master = master
         self.master_seg = master
         self.master_ter = master
-        self.canvas = Canvas(master, width=600, height=500, highlightthickness=0, relief='ridge', bg="black")
+        self.canvas = Canvas(master, width=796, height=500, highlightthickness=0, relief='ridge', bg="black")
         self.canvas.place(x=0, y=0)
         self.pantallaInicio()
 
     def pantallaInicio(self):
-        self.canvas = Canvas(self.master, width=600, height=500, relief='ridge',bg="black")
+        self.canvas = Canvas(self.master, width=796, height=500, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
         self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
         self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
@@ -60,7 +65,7 @@ class Pantalla_principal:
         
     #ventana de puntajes
     def puntajes(self):
-        self.canvas = Canvas(self.master, width=700, height=850, relief='ridge',bg="black")
+        self.canvas = Canvas(self.master, width=796, height=800, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
         self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
         self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
@@ -72,7 +77,7 @@ class Pantalla_principal:
    
     #ventana about con labels que muestran informacion importante
     def creditos(self):
-        self.canvas = Canvas(self.master, width=600, height=500, relief='ridge',bg="#1d2086")
+        self.canvas = Canvas(self.master, width=796, height=500, relief='ridge',bg="#1d2086")
         self.canvas.place(x=0, y=0)
         self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
         self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
@@ -135,15 +140,26 @@ class Pantalla_principal:
 
     # primer nivel del juego 
     def primerNivel(self):
-        self.canvas = Canvas(self.master, width=600, height=500, relief='ridge',bg="black")
+        global parar
+        global Nave
+        self.canvas = Canvas(self.master, width=796, height=500, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
-        self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
-        self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
-
-        #vida de la nave nivel 1
-        self.vidanave = Label(self.canvas, text="vida: 3", font=("Comic Sans MS", 9),fg="red",bg="#1d2086")
+        self.boton_retorno1 = Button(self.canvas, text="back",font=("Comic Sans MS", 9),bg="#1d2086")
+        self.boton_retorno1.place(x=0,y=218, width=100, height=30)
+        
+        self.vidanave = Label(self.canvas, text="Vida: ", font=("Helvetica", 9), fg="#f55cdf", bg="#1d2086")
         self.vidanave.place(x=0, y=130)
         
+        self.sequence = [ImageTk.PhotoImage(img)
+                            for img in ImageSequence.Iterator(
+                                    Image.open(
+                                    r'zafkiel.gif'))]
+        self.image = self.canvas.create_image(400,250, image=self.sequence[0])
+        
+        def animate(counter):
+            self.canvas.itemconfig(self.image, image=self.sequence[counter])
+            self.canvas.after(20, lambda: animate((counter+1) % len(self.sequence)))
+        animate(1)
         #tiempo nivel 1
         self.tiempo_nivel1 = Label(self.canvas, text="tiempo",font=("Comic Sans MS", 9),fg="red",bg="#1d2086")
         self.tiempo_nivel1.place(x=0, y=172)
@@ -164,66 +180,127 @@ class Pantalla_principal:
         self.Nave=ImageTk.PhotoImage(Image.open("nave.png"))
         self.nave_N1 = self.canvas.create_image(250,450,image=self.Nave, anchor=NW)
 
+        self.vidanave = Label(self.canvas, text="Vida: " + str(Nave), font=("Helvetica", 9), fg="#f55cdf", bg="#1d2086")
+        self.vidanave.place(x=0, y=130)
+        
+        self.enemiga = ImageTk.PhotoImage(Image.open("enemigo.png"))
+        
+        
         #importa img de la bala de la nave
         self.bala_nave=ImageTk.PhotoImage(Image.open("Fire1.gif"))
-
+        
+        self.enemigo=ImageTk.PhotoImage(Image.open("enemigo.png"))
+        
+        progress = Progressbar(window, orient = HORIZONTAL,length = 100, mode = 'determinate')
+        progress.place(x=0,y=250)
         #varible y llamada a la función de cronometro
         self.segundos=0
-        self.cronometro_N1()
 
- 
+        #cronometro 
+        def cronometro_N1():
+            global minutos
+            if self.segundos == 60:
+                minutos+=1
+                self.segundos=0
+                self.tiempo_nivel1.configure(text="tiempo: "+ str(minutos)+":"+str(self.segundos))#actualiza el tiempo
+                return self.jefe_derrotado()
+            self.tiempo_nivel1.configure(text="tiempo: "+str(minutos)+":"+ str(self.segundos))#actualiza el tiempo
+            self.segundos += 1
+            self.canvas.after(1000,cronometro_N1)#repite la funcion cada segundo
+        cronometro_N1()
+        def rebotedebalas():
+            
+            #crea las balas
+            enemigo = self.canvas.create_image(600, 0,image=self.enemiga, anchor=NW)
+            enemigodos = self.canvas.create_image(500, 0,image=self.enemiga, anchor=NW)
+            enemigotres = self.canvas.create_image(400, 0,image=self.enemiga, anchor=NW)
+            enemigocuatro = self.canvas.create_image(300, 0,image=self.enemiga, anchor=NW)
+            enemigocinco = self.canvas.create_image(200, 0,image=self.enemiga, anchor=NW)
+            
+            #envia las balas creadas a la funcion que hace su movimiento
+            rebotedebalas_aux(enemigo)
+            rebotedebalas_aux(enemigodos)
+            rebotedebalas_aux(enemigotres)
+            rebotedebalas_aux(enemigocuatro)
+            rebotedebalas_aux(enemigocinco)
+            #self.canvas.after(100,rebotedebalas)
 
-    #cronometro 
-    def cronometro_N1(self):
-        global minutos
-        if self.segundos == 60:
-            minutos+=1
-            self.segundos=0
-            self.tiempo_nivel1.configure(text="tiempo: "+ str(minutos)+":"+str(self.segundos))#actualiza el tiempo
-            return self.jefe_derrotado()
-        self.tiempo_nivel1.configure(text="tiempo: "+str(minutos)+":"+ str(self.segundos))#actualiza el tiempo
-        self.segundos += 1
-        self.canvas.after(10, self.cronometro_N1)#repite la funcion cada segundo
+        def rebotedebalas_aux(enemigo):
+            global xspeed
+            global yspeed
+            self.canvas.move(enemigo, xspeed, yspeed)
+            #obtiene coordenadas del enemigo en el eje x,y
+            x = self.canvas.coords(enemigo)[0]
+            y = self.canvas.coords(enemigo)[1]
+            
+            if self.canvas.coords(enemigo)[0] > 760 or self.canvas.coords(enemigo)[0] < 0: # y range
+                    xspeed = -xspeed
+            if self.canvas.coords(enemigo)[1] > 450 or self.canvas.coords(enemigo)[1] < 0: # x range
+                    yspeed = -yspeed
+            
+            self.canvas.after(10, rebotedebalas_aux,enemigo)
+
+        rebotedebalas()
 
 
-        self.master.bind("<KeyRelease>", self.disparo_nave)#para evento discontinuo de teclas
-        self.master.bind("<KeyPress>", self.movimiento_nave)#para evento continuo de teclas
-
-    #verifica las teclas y realiza el movimiento de la nave
-    def movimiento_nave(self, mover):
-        if mover.keysym=='Right' and self.canvas.coords(self.nave_N1)[0]<594:#derecha
-            self.canvas.move(self.nave_N1, 8, 0)
-        if mover.keysym=='Left' and self.canvas.coords(self.nave_N1)[0]>0:#izquierda
-            self.canvas.move(self.nave_N1, -8, 0)   
-        if mover.keysym=='Down' and self.canvas.coords(self.nave_N1)[1]<680:#abajo
-            self.canvas.move(self.nave_N1, 0, 8)
-        if mover.keysym=='Up' and self.canvas.coords(self.nave_N1)[1]>0:#arriba
-            self.canvas.move(self.nave_N1, 0, -8)
-                
-    #verifica la tecla presionada
-    def disparo_nave(self, tecla):
-        if tecla.keysym == 'f':
-            #obtiene las coordenadas de la nave y crea la bala en esa posicion
-            self.x = self.canvas.coords(self.nave_N1)[0]
-            self.y = self.canvas.coords(self.nave_N1)[1]
-            bala_nave = self.canvas.create_image(self.x+13,self.y,image=self.bala_nave, anchor=NW)
-            self.disparo_nave_aux(bala_nave)#llama a la funcion de movimiento de la bala de la nave
-
-
-    #realiza el movimiento de la bala
-    def disparo_nave_aux(self, bala_nave):
-        if self.canvas.coords(bala_nave)[1] > 0:
-            self.canvas.move(bala_nave, 0, -10)
-            self.canvas.after(20,self.disparo_nave_aux,bala_nave)
-        else:
-            self.canvas.delete(bala_nave)#elimina la bala cuando llega al limite superior
+        def colision_n1():
+            global Nave
+            #daño caja nave
+            Caja_nave = self.canvas.bbox(self.nave_N1)
+            #daño caja boss
+            daño_cajabo = self.canvas.bbox(self.enemigo)
+            if daño_cajabo[2]>daño_cajana[0]>daño_cajabo[0] and daño_cajabo[2]<daño_cajana[3]<daño_cajabo[3]:
+               global Nave
+               Nave-=10
+               self.vidanave.config(text="Nave: " + str(Nave))
     
- 
+
+        #verifica las teclas y realiza el movimiento de la nave
+        def movimiento_nave(mover):
+            if mover.keysym=='Right' and self.canvas.coords(self.nave_N1)[0]<760:#derecha
+                self.canvas.move(self.nave_N1, 8, 0)
+            if mover.keysym=='Left' and self.canvas.coords(self.nave_N1)[0]>5:#izquierda
+                self.canvas.move(self.nave_N1, -8, 0)   
+            if mover.keysym=='Down' and self.canvas.coords(self.nave_N1)[1]<450:#abajo
+                self.canvas.move(self.nave_N1, 0, 8)
+            if mover.keysym=='Up' and self.canvas.coords(self.nave_N1)[1]>0:#arriba
+                self.canvas.move(self.nave_N1, 0, -8)
+        self.master.bind("<KeyPress>", movimiento_nave)#para evento continuo de teclas
+        
+        #verifica la tecla presionada
+        def disparo_nave(tecla):
+            if tecla.keysym == 'f':
+                #obtiene las coordenadas de la nave y crea la bala en esa posicion
+                self.x = self.canvas.coords(self.nave_N1)[0]
+                self.y = self.canvas.coords(self.nave_N1)[1]
+                bala_nave = self.canvas.create_image(self.x+10,self.y,image=self.bala_nave, anchor=NW)
+                disparo_nave_aux(bala_nave)#llama a la funcion de movimiento de la bala de la nave
+
+        self.master.bind("<KeyRelease>", disparo_nave)#para evento discontinuo de teclas
+        #realiza el movimiento de la bala
+        def disparo_nave_aux(bala_nave):
+            if self.canvas.coords(bala_nave)[1] > 0:
+                self.canvas.move(bala_nave, 0, -10)
+                self.canvas.after(20,disparo_nave_aux,bala_nave)
+            else:
+                self.canvas.delete(bala_nave)#elimina la bala cuando llega al limite superior
+      
+        def barra_de_progreso():
+            Limite = 60
+            Tiempo = 0
+            speed = 1
+            while(Tiempo<Limite):
+                time.sleep(1)
+                progress["value"]+=(speed/Limite)*100
+                Tiempo+=speed
+                window.update_idletasks()
+        t1 = Thread(target= barra_de_progreso)
+        t1.start()
 
     #segundo nivel del juego
     def segundoNivel(self):
         global puntaje
-        self.canvas = Canvas(self.master, width=600, height=500, relief='ridge',bg="black")
+        self.canvas = Canvas(self.master, width=796, height=500, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
         self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
         self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
@@ -255,64 +332,74 @@ class Pantalla_principal:
 
         #importa img de las balas de la nave y el enemigo
         self.bala_nave2=ImageTk.PhotoImage(Image.open("Fire1.gif"))
-   
+        progreso = Progressbar(window, orient = HORIZONTAL,length = 100, mode = 'determinate')
+        progreso.place(x=0,y=250)
 
         #variable y llamada a la funcion de cronometro
         self.segundos2=0
-        self.iniciar2()
+        
 
         #llama a la funcion de colision
   
-        self.master.bind("<KeyRelease>", self.disparo_nave_2)#para evento discontinuo de teclas
-        self.master.bind("<KeyPress>", self.mover_nave_2)#para evento continuo de teclas
 
-    #cronometro 
-    def iniciar2(self):
-        global minutos_nivel_dos
-        if self.segundos2 == 60:
-            minutos_nivel_dos += 1
-            self.segundos2=0
+        #cronometro 
+        def iniciar2():
+            global minutos_nivel_dos
+            if self.segundos2 == 60:
+                minutos_nivel_dos += 1
+                self.segundos2=0
+                self.tiempo_nivel2.configure(text="tiempo: "+ str(minutos_nivel_dos)+":"+str(self.segundos2))#actualiza el tiempo
+                return self.jefe_derrotado()
             self.tiempo_nivel2.configure(text="tiempo: "+ str(minutos_nivel_dos)+":"+str(self.segundos2))#actualiza el tiempo
-            return self.jefe_derrotado()
-        self.tiempo_nivel2.configure(text="tiempo: "+ str(minutos_nivel_dos)+":"+str(self.segundos2))#actualiza el tiempo
-        self.segundos2 +=1
-        self.canvas.after(100, self.iniciar2)#repite el proceso cada segundo
-            
+            self.segundos2 +=1
+            self.canvas.after(1000,iniciar2)#repite el proceso cada segundo
+        iniciar2()        
 
-    #verifica la tecla presionada
-    def disparo_nave_2(self, tecla):
-        if tecla.keysym == 'f':
-            #obtiene las coordenadas de la nave y crea la bala en esa posicion
-            self.x = self.canvas.coords(self.nave_N2)[0]
-            self.y = self.canvas.coords(self.nave_N2)[1]
-            bala_nave_N2 = self.canvas.create_image(self.x+15,self.y,image=self.bala_nave2, anchor=NW)
-            self.disparar_aux2(bala_nave_N2)
-
-    #realiza el movimiento de la bala
-    def disparar_aux2(self, bala_nave2):
-        if self.canvas.coords(bala_nave2)[1] > 0:
-            self.canvas.move(bala_nave2, 0, -10)
-            self.canvas.after(20, self.disparar_aux2,bala_nave2)
-        else:
-            self.canvas.delete(bala_nave2)#elimina la bala cuando llega al limite superior
-            
-    #verifica las teclas y realiza el movimiento de la nave
-    def mover_nave_2(self, mover):
-        if mover.keysym=='Right' and self.canvas.coords(self.nave_N2)[0]<594:#derecha
-            self.canvas.move(self.nave_N2, 15, 0)
-        if mover.keysym=='Left' and self.canvas.coords(self.nave_N2)[0]>0:#izquierda
-            self.canvas.move(self.nave_N2, -15, 0)   
-        if mover.keysym=='Down' and self.canvas.coords(self.nave_N2)[1]<680:#abajo
-            self.canvas.move(self.nave_N2, 0, 15)
-        if mover.keysym=='Up' and self.canvas.coords(self.nave_N2)[1]>0:#arriba
-            self.canvas.move(self.nave_N2, 0, -15)
-
-
+        
+        #verifica la tecla presionada
+        def disparo_nave_2(tecla):
+            if tecla.keysym == 'f':
+                #obtiene las coordenadas de la nave y crea la bala en esa posicion
+                self.x = self.canvas.coords(self.nave_N2)[0]
+                self.y = self.canvas.coords(self.nave_N2)[1]
+                bala_nave_N2 = self.canvas.create_image(self.x+15,self.y,image=self.bala_nave2, anchor=NW)
+                disparar_aux2(bala_nave_N2)
+        self.master.bind("<KeyRelease>", disparo_nave_2)#para evento discontinuo de teclas
+        #realiza el movimiento de la bala
+        def disparar_aux2(bala_nave2):
+            if self.canvas.coords(bala_nave2)[1] > 0:
+                self.canvas.move(bala_nave2, 0, -10)
+                self.canvas.after(20, disparar_aux2,bala_nave2)
+            else:
+                self.canvas.delete(bala_nave2)#elimina la bala cuando llega al limite superior
+                
+        #verifica las teclas y realiza el movimiento de la nave
+        def mover_nave_2(mover):
+            if mover.keysym=='Right' and self.canvas.coords(self.nave_N2)[0]<594:#derecha
+                self.canvas.move(self.nave_N2, 15, 0)
+            if mover.keysym=='Left' and self.canvas.coords(self.nave_N2)[0]>0:#izquierda
+                self.canvas.move(self.nave_N2, -15, 0)   
+            if mover.keysym=='Down' and self.canvas.coords(self.nave_N2)[1]<680:#abajo
+                self.canvas.move(self.nave_N2, 0, 15)
+            if mover.keysym=='Up' and self.canvas.coords(self.nave_N2)[1]>0:#arriba
+                self.canvas.move(self.nave_N2, 0, -15)
+        self.master.bind("<KeyPress>",mover_nave_2)#para evento continuo de teclas
+        def barra_de_progreso_2():
+            Limite = 60
+            Tiempo = 0
+            speed = 1
+            while(Tiempo<Limite):
+                time.sleep(1)
+                progreso['value']+=(speed/Limite)*100
+                Tiempo+=speed
+                window.update_idletasks()
+        t2 = Thread(target= barra_de_progreso_2)
+        t2.start()
 
     def tercerNivel(self):
         global puntaje
         global no_dispare#global para detener el disparo del enemigo
-        self.canvas = Canvas(self.master, width=600, height=500, relief='ridge',bg="#1d2086")
+        self.canvas = Canvas(self.master, width=796, height=500, relief='ridge',bg="#1d2086")
         self.canvas.place(x=0, y=0)
         self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
         self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
@@ -343,58 +430,68 @@ class Pantalla_principal:
         self.nave_N3 = self.canvas.create_image(250,450,image=self.nave_N3_img, anchor=NW)#coloca la imagen en la ventana
 
 
-        self.bala_nave3=ImageTk.PhotoImage(Image.open("Fire1.gif"))#importa imagen de la bala de la nave
+        self.bala_nave_3 = ImageTk.PhotoImage(Image.open("Fire1.gif"))#importa imagen de la bala de la nave
         #variable y llamada al cronometro
         self.segundos_N3=0
-        self.cronometro_N3()
+        progresoo = Progressbar(window, orient = HORIZONTAL,length = 100, mode = 'determinate')
+        progresoo.place(x=0,y=250)
+        
+
 
         
 
-        
-        self.master.bind("<KeyRelease>", self.disparo_nave3)#realiza el evento de varias pulsaciones de tecla
-        self.master.bind("<KeyPress>", self.mover_nave3)#realiza el evento de mantener pulsada las teclas
+        #cuenta el tiempo
+        def cronometro_N3():
+            global minutos_nivel_tres
+            if self.segundos_N3 == 60:#verifica si se llego a 60 segundos
+                minutos_nivel_tres +=1#aumenta en 1 los minutos
+                self.segundos_N3=0
+                self.tiempo_N3.configure(text="tiempo "+ str(minutos_nivel_tres)+":"+str(self.segundos_N3))#actualiza los minutos y segundos
+                return self.jefe_derrotado()
+            self.tiempo_N3.configure(text="tiempo "+ str(minutos_nivel_tres)+":"+str(self.segundos_N3))#actualiza los segundos
+            self.segundos_N3 +=1
+            self.canvas.after(1000,cronometro_N3)#repite la funcion cada 1 segundo
+        cronometro_N3()
+        #verifica la tecla de disparo
+        def disparo_nave3(tecla):
+            if tecla.keysym == '1':
+            #crea la bala de la nave y obtiene la posicion de la nave
+                self.x = self.canvas.coords(self.nave_N3)[0]
+                self.y = self.canvas.coords(self.nave_N3)[1]
+                bala_nave_3 = self.canvas.create_image(self.x+15,self.y,image=self.bala_nave_3, anchor=NW)#crea la bala en la posicion de la nave
+                disparo_nave_aux_N3(bala_nave_3)
 
-    #cuenta el tiempo
-    def cronometro_N3(self):
-        global minutos_nivel_tres
-        if self.segundos_N3 == 60:#verifica si se llego a 60 segundos
-            minutos_nivel_tres +=1#aumenta en 1 los minutos
-            self.segundos_N3=0
-            self.tiempo_N3.configure(text="tiempo "+ str(minutos_nivel_tres)+":"+str(self.segundos_N3))#actualiza los minutos y segundos
-            return self.jefe_derrotado()
-        self.tiempo_N3.configure(text="tiempo "+ str(minutos_nivel_tres)+":"+str(self.segundos_N3))#actualiza los segundos
-        self.segundos_N3 +=1
-        self.canvas.after(1000, self.cronometro_N3)#repite la funcion cada 1 segundo
-        
-    #verifica la tecla de disparo
-    def disparo_nave3(self, tecla):
-        if tecla.keysym == '1':
-        #crea la bala de la nave y obtiene la posicion de la nave
-            self.x = self.canvas.coords(self.nave_N3)[0]
-            self.y = self.canvas.coords(self.nave_N3)[1]
-            bala_nave3 = self.canvas.create_image(self.x+15,self.y,image=self.bala_nave3, anchor=NW)#crea la bala en la posicion de la nave
-            self.disparo_nave_aux_N3(bala_nave3)
+        self.master.bind("<KeyRelease>", disparo_nave3)#realiza el evento de varias pulsaciones de tecla
+        #realiza el movimiento de la bala
+        def disparo_nave_aux_N3(bala_nave_3):
+            if self.canvas.coords(bala_nave_3)[1] > 0:
+                self.canvas.move(bala_nave_3, 0, -10)
+                self.canvas.after(20,disparo_nave_aux_N3,bala_nave_3)
+            else:
+                self.canvas.delete(bala_nave_3)#elimina la bala cuando llega al limite superior
+                
+        def mover_nave3(mover):
+            if mover.keysym=='Right' and self.canvas.coords(self.nave_N3)[0]<594:#se mueve a la derecha hasta el limite
+                self.canvas.move(self.nave_N3, 8, 0)
+            if mover.keysym=='Left' and self.canvas.coords(self.nave_N3)[0]>0:#se mueve a la izquierda hasta el limite
+                self.canvas.move(self.nave_N3, -8, 0)   
+            if mover.keysym=='Down' and self.canvas.coords(self.nave_N3)[1]<680:#se mueve abajo hasta el limite
+                self.canvas.move(self.nave_N3, 0, 8)
+            if mover.keysym=='Up' and self.canvas.coords(self.nave_N3)[1]>0:#se mueve arriba hasta el limite
+                self.canvas.move(self.nave_N3, 0, -8)
+        self.master.bind("<KeyPress>", mover_nave3)#realiza el evento de mantener pulsada las teclas
+        def barra_de_progreso_3():
+            Limite = 60
+            Tiempo = 0
+            speed = 1
+            while(Tiempo<Limite):
+                time.sleep(1)
+                progresoo['value']+=(speed/Limite)*100
+                Tiempo+=speed
+                window.update_idletasks()
+        t3 = Thread(target= barra_de_progreso_3)
+        t3.start()
 
-        
-    #realiza el movimiento de la bala
-    def disparo_nave_aux_N3(self, bala_nave3):
-        if self.canvas.coords(bala_nave3)[1] > 0:
-            self.canvas.move(bala_nave3, 0, -10)
-            self.canvas.after(20,self.disparo_nave_aux_N3,bala_nave3)
-        else:
-            self.canvas.delete(bala_nave3)#elimina la bala cuando llega al limite superior
-            
-    def mover_nave3(self, mover):
-        if mover.keysym=='Right' and self.canvas.coords(self.nave_N3)[0]<594:#se mueve a la derecha hasta el limite
-            self.canvas.move(self.nave_N3, 8, 0)
-        if mover.keysym=='Left' and self.canvas.coords(self.nave_N3)[0]>0:#se mueve a la izquierda hasta el limite
-            self.canvas.move(self.nave_N3, -8, 0)   
-        if mover.keysym=='Down' and self.canvas.coords(self.nave_N3)[1]<680:#se mueve abajo hasta el limite
-            self.canvas.move(self.nave_N3, 0, 8)
-        if mover.keysym=='Up' and self.canvas.coords(self.nave_N3)[1]>0:#se mueve arriba hasta el limite
-            self.canvas.move(self.nave_N3, 0, -8)
-
-        
 
     #verifica cuando el enemigo es derrotado y pasa al siguiente nivel
     def jefe_derrotado(self):
@@ -476,7 +573,8 @@ valorRango = IntVar()
 window.config(cursor="pirate")
 ventana_principal = Pantalla_principal(window)
 window.title("space")
-window.minsize(600, 500)
+window.minsize(800, 500)
 window.resizable(False, False)
 window.mainloop()
+
 
