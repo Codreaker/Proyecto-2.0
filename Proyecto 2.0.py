@@ -73,6 +73,7 @@ class Pantalla_principal:
         self.button_mostrar = Button(self.canvas, text ="Puntajes", fg="black", bg="#b4b0f7", command = self.puntajes)
         self.button_mostrar.place(x=500,y=470,width=100,height=30)
         
+        
     #ventana de puntajes
     def puntajes(self):
         self.canvas = Canvas(self.master, width=796, height=800, relief='ridge',bg="black")
@@ -156,6 +157,8 @@ class Pantalla_principal:
         self.canvas.place(x=0, y=0)
         self.boton_retorno1 = Button(self.canvas, text="back",font=("Comic Sans MS", 9),bg="#1d2086")
         self.boton_retorno1.place(x=0,y=218, width=100, height=30)
+        self.boton_retorno1 = Button(self.canvas, text="back",font=("Comic Sans MS", 9),bg="#1d2086")
+        self.boton_retorno1.place(x=0,y=218, width=100, height=30)
         
         self.vidanave = Label(self.canvas, text="Vida: ", font=("Helvetica", 9), fg="#f55cdf", bg="#1d2086")
         self.vidanave.place(x=0, y=130)
@@ -177,6 +180,8 @@ class Pantalla_principal:
         pygame.mixer.music.play(4)
 
         
+
+        
         #tiempo nivel 1
         self.tiempo_nivel1 = Label(self.canvas, text="tiempo",font=("Comic Sans MS", 9),fg="red",bg="#1d2086")
         self.tiempo_nivel1.place(x=0, y=172)
@@ -192,6 +197,21 @@ class Pantalla_principal:
         #boton de retorno a la pantalla de inicio
         self.boton_retorno1 = Button(self.canvas, text="back",font=("Comic Sans MS", 9),bg="#1d2086",command=self.retorno)
         self.boton_retorno1.place(x=0,y=218, width=100, height=30)
+        global paused
+        paused = False
+        def parar_o_reanudar_musica(is_paused):
+            global paused
+            paused = is_paused
+            if paused:
+                pygame.mixer.music.unpause()
+                paused = False
+            else:
+                pygame.mixer.music.pause()
+                paused = True
+     
+        self.mute = Button(self.canvas, text="Mute or UnMute",font=("Comic Sans MS", 5),bg="#1d2086",command = lambda:parar_o_reanudar_musica(paused))
+        self.mute.place(x=0,y=290, width=50, height=30)
+   
 
         #importa y coloca la img de la nave
         self.Nave=ImageTk.PhotoImage(Image.open("nave.png"))
@@ -212,7 +232,7 @@ class Pantalla_principal:
         progress.place(x=0,y=250)
         #varible y llamada a la función de cronometro
         self.segundos=0
-
+        
         #cronometro 
         def cronometro_N1():
             global minutos
@@ -226,37 +246,38 @@ class Pantalla_principal:
             self.canvas.after(1000,cronometro_N1)#repite la funcion cada segundo
         cronometro_N1()
         def rebotedebalas():
-            
+            ran = randint(0,795)
+            randos = randint(0,795)
+            rantres = randint(0,795)
+            rancuatro = randint(0,795)
+            rancinco = randint(0,795)
+           
             #crea las balas
-            enemigo = self.canvas.create_image(600, 0,image=self.enemiga, anchor=NW)
-            enemigodos = self.canvas.create_image(500, 0,image=self.enemiga, anchor=NW)
-            enemigotres = self.canvas.create_image(400, 0,image=self.enemiga, anchor=NW)
-            enemigocuatro = self.canvas.create_image(300, 0,image=self.enemiga, anchor=NW)
-            enemigocinco = self.canvas.create_image(200, 0,image=self.enemiga, anchor=NW)
+            enemigo = self.canvas.create_image(ran, 100,image=self.enemiga, anchor=NW)
+            enemigodos = self.canvas.create_image(randos, 170,image=self.enemiga, anchor=NW)
+            enemigotres = self.canvas.create_image(rantres, 300,image=self.enemiga, anchor=NW)
+            enemigocuatro = self.canvas.create_image(rancuatro, 450,image=self.enemiga, anchor=NW)
+            enemigocinco = self.canvas.create_image(rancinco, 10,image=self.enemiga, anchor=NW)
             
             #envia las balas creadas a la funcion que hace su movimiento
-            rebotedebalas_aux(enemigo)
-            rebotedebalas_aux(enemigodos)
-            rebotedebalas_aux(enemigotres)
-            rebotedebalas_aux(enemigocuatro)
-            rebotedebalas_aux(enemigocinco)
+            rebotedebalas_aux(enemigo,1,4)
+            rebotedebalas_aux(enemigodos,1,4)
+            rebotedebalas_aux(enemigotres,1,4)
+            rebotedebalas_aux(enemigocuatro,1,4)
+            rebotedebalas_aux(enemigocinco,1,4)
             #self.canvas.after(100,rebotedebalas)
 
-        def rebotedebalas_aux(enemigo):
-            global xspeed
-            global yspeed
-            self.canvas.move(enemigo, xspeed, yspeed)
+        def rebotedebalas_aux(enemigo, x , y):
+            
+            self.canvas.move(enemigo, x, y)
             #obtiene coordenadas del enemigo en el eje x,y
-            x = self.canvas.coords(enemigo)[0]
-            y = self.canvas.coords(enemigo)[1]
             
             if self.canvas.coords(enemigo)[0] > 760 or self.canvas.coords(enemigo)[0] < 0: # y range
-                    xspeed = -xspeed
+                    x = -x
             if self.canvas.coords(enemigo)[1] > 450 or self.canvas.coords(enemigo)[1] < 0: # x range
-                    yspeed = -yspeed
+                    y = -y
             
-            self.canvas.after(10, rebotedebalas_aux,enemigo)
-
+            self.canvas.after(10,lambda:rebotedebalas_aux(enemigo,x,y))
         rebotedebalas()
 
 
@@ -314,6 +335,7 @@ class Pantalla_principal:
         t1 = Thread(target= barra_de_progreso)
         t1.start()
 
+        
     #segundo nivel del juego
     def segundoNivel(self):
         global puntaje
