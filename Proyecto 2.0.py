@@ -1,4 +1,5 @@
 from tkinter import *
+import pygame
 from tkinter.ttk import Progressbar
 from random import *
 from PIL import Image, ImageTk, ImageSequence
@@ -27,6 +28,8 @@ class Pantalla_principal:
         self.pantallaInicio()
 
     def pantallaInicio(self):
+ 
+        
         self.canvas = Canvas(self.master, width=796, height=500, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
         self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
@@ -39,6 +42,13 @@ class Pantalla_principal:
         self.name_please = Label(self.canvas, text="Digite su nombre:", fg="#f55cdf", bg="#1A1153")
         self.name_please.place(x=200,y=155,width=100,height=30)
 
+
+        pygame.init()
+        pygame.mixer.music.load("Musica.ogg")
+        pygame.mixer.music.play(4)
+
+
+        
         #entrada de texto para el nombre
         self.player_name = Entry(self.canvas)
         self.player_name.place(x=300,y=155,width=100,height=30)
@@ -153,13 +163,20 @@ class Pantalla_principal:
         self.sequence = [ImageTk.PhotoImage(img)
                             for img in ImageSequence.Iterator(
                                     Image.open(
-                                    r'zafkiel.gif'))]
+                                    r'wow.gif'))]
         self.image = self.canvas.create_image(400,250, image=self.sequence[0])
         
         def animate(counter):
             self.canvas.itemconfig(self.image, image=self.sequence[counter])
             self.canvas.after(100, lambda: animate((counter+1) % len(self.sequence)))
         animate(1)
+
+
+        pygame.init()
+        pygame.mixer.music.load("Musica.ogg")
+        pygame.mixer.music.play(4)
+
+        
         #tiempo nivel 1
         self.tiempo_nivel1 = Label(self.canvas, text="tiempo",font=("Comic Sans MS", 9),fg="red",bg="#1d2086")
         self.tiempo_nivel1.place(x=0, y=172)
@@ -313,7 +330,11 @@ class Pantalla_principal:
             self.canvas.after(100, lambda: animate((counter+1) % len(self.sequence)))
         animate(1)
 
+        pygame.init()
+        pygame.mixer.music.load("JitaiKyuuhen-KarinNakanoSatoshiHono-5036133.mp3")
+        pygame.mixer.music.play(4)
 
+        
         #boton de retorno a la pantalla de inicio
         self.boton_retorno2 = Button(self.canvas, text="back",font=("Comic Sans MS", 8),bg="#1d2086",command=self.retorno)
         self.boton_retorno2.place(x=0,y=218, width=100, height=30)
@@ -412,13 +433,19 @@ class Pantalla_principal:
         self.sequence = [ImageTk.PhotoImage(img)
                             for img in ImageSequence.Iterator(
                                     Image.open(
-                                    r'wow.gif'))]
+                                    r'zafkiel.gif'))]
         self.image = self.canvas.create_image(400,250, image=self.sequence[0])
         
         def animate(counter):
             self.canvas.itemconfig(self.image, image=self.sequence[counter])
             self.canvas.after(120, lambda: animate((counter+1) % len(self.sequence)))
         animate(1)
+
+
+
+        pygame.init()
+        pygame.mixer.music.load("ElectronicWarfare-KarinNakanoSatoshiHono-5036030.mp3")
+        pygame.mixer.music.play(4)
 
 
         #boton para regresar a pantalla de inicio
@@ -519,6 +546,7 @@ class Pantalla_principal:
         
         if minutos == 1:#verifica el nivel 1
             self.bonus()
+            pygame.mixer.stop
             time.sleep(1)
             self.canvas.destroy()
             self.segundoNivel()
@@ -526,6 +554,7 @@ class Pantalla_principal:
      
         if minutos_nivel_dos == 1:#verifica el nivel 2
             self.bonus()
+            pygame.mixer.stop
             self.canvas.destroy()
             time.sleep(1)
             self.tercerNivel()
@@ -533,6 +562,7 @@ class Pantalla_principal:
             
         if minutos_nivel_tres == 1:#verifica el nivel 3
             self.bonus()
+            pygame.mixer.stop
             self.canvas.destroy()
             time.sleep(1)
             self.retorno()
@@ -579,6 +609,7 @@ class Pantalla_principal:
         minutos_nivel_tres = 0
         minutos=0
         nombre=""
+        pygame.mixer.stop
         self.canvas.destroy()
         self.pantallaInicio()
 
