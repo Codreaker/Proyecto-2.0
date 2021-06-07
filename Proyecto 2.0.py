@@ -36,8 +36,8 @@ class Pantalla_principal:
         self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
 
         # Label en la parte superior para texto de bienvenido
-        self.bienvenido = Label(self.canvas, text="GLOW IN THE DARK", font=("Helvetica", 12), fg="#f55cdf", bg="#190F3B")
-        self.bienvenido.place(x=200,y=30)
+        self.bienvenido = Label(self.canvas, text="CLOCKWORK PLANET", font=("Helvetica", 12), fg="#f55cdf", bg="#190F3B")
+        self.bienvenido.place(x=350,y=30)
         #Label para indicar escribir el nombre
         self.name_please = Label(self.canvas, text="Digite su nombre:", fg="#f55cdf", bg="#1A1153")
         self.name_please.place(x=200,y=155,width=100,height=30)
@@ -173,7 +173,7 @@ class Pantalla_principal:
 
 
         pygame.init()
-        pygame.mixer.music.load("Musica.ogg")
+        pygame.mixer.music.load("MarieNoChouzetsuGikou-KarinNakanoSatoshiHono-5036166.mp3")
         pygame.mixer.music.play(4)
 
         
