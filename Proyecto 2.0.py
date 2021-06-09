@@ -14,6 +14,8 @@ minutos=0
 minutos_nivel_dos = 0
 minutos_nivel_tres = 0
 parar = True
+xspeed = 1 
+yspeed = 4
 pasa = True
 
 # clase donde estara el juego con ambas ventanas
@@ -58,7 +60,7 @@ class Pantalla_principal:
                 pygame.mixer.music.pause()
                 paused = True
 
-        self.mute = Button(self.canvas, text="Mute",font=("Comic Sans MS", 12),bg="#b4b0f7",command = lambda:parar_o_reanudar_musica(paused))
+        self.mute = Button(self.canvas, text="Mute",font=("Comic Sans MS", 5),bg="#b4b0f7",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=350,y=520, width=80, height=30)
         
         #entrada de texto para el nombre
