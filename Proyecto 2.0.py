@@ -278,7 +278,8 @@ class Pantalla_principal:
 
         def rebotedebalas_aux(enemigo, x , y):
             sonido_choque = pygame.mixer.Sound("golpe.mp3")
-            sonido_choque.play()
+            
+            
             area_nave = self.canvas.bbox(self.nave_N1)
             #daño caja boss
             area_Misil = self.canvas.bbox(enemigo)
@@ -287,10 +288,12 @@ class Pantalla_principal:
             try:
                 if self.canvas.coords(enemigo)[0] > 760 or self.canvas.coords(enemigo)[0] < 0: # y range
                         x = -x
-                        
+                    
+                        sonido_choque.play()
                 if self.canvas.coords(enemigo)[1] > 450 or self.canvas.coords(enemigo)[1] < 0: # x range
                         y = -y
                         
+                        sonido_choque.play()
                 if (area_nave[2]>area_Misil[0]>area_nave[0]) and (area_nave[1]<area_Misil[3]<area_nave[3]):
                         self.canvas.delete(enemigo)
                         global Nave
@@ -300,6 +303,7 @@ class Pantalla_principal:
                             return self.juego_perdido()
             except IndexError:#controla el error y elimina la bala del enemigo
                  self.canvas.delete(enemigo)
+            sonido_choque.play()
             self.canvas.after(10,lambda:rebotedebalas_aux(enemigo,x,y))
         rebotedebalas()
 
