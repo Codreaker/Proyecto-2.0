@@ -22,24 +22,24 @@ class Pantalla_principal:
         self.master = master
         self.master_seg = master
         self.master_ter = master
-        self.canvas = Canvas(master, width=796, height=500, highlightthickness=0, relief='ridge', bg="black")
+        self.canvas = Canvas(master, width=1200, height=700, highlightthickness=0, relief='ridge', bg="black")
         self.canvas.place(x=0, y=0)
         self.pantallaInicio()
 
     def pantallaInicio(self):
  
         
-        self.canvas = Canvas(self.master, width=796, height=550, relief='ridge',bg="black")
+        self.canvas = Canvas(self.master, width=1200, height=700, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
         self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
         self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
 
         # Label en la parte superior para texto de bienvenido
         self.bienvenido = Label(self.canvas, text="CLOCKWORK PLANET", font=("Helvetica", 12), fg="#c44387", bg="#27433a")
-        self.bienvenido.place(x=310,y=30)
+        self.bienvenido.place(x=510,y=30)
         #Label para indicar escribir el nombre
         self.name_please = Label(self.canvas, text="Digite su nombre:", fg="#c44387", bg="#27433a")
-        self.name_please.place(x=278,y=155,width=100,height=30)
+        self.name_please.place(x=450,y=155,width=100,height=30)
 
 
         pygame.init()
@@ -59,36 +59,36 @@ class Pantalla_principal:
                 paused = True
 
         self.mute = Button(self.canvas, text="Mute",font=("Comic Sans MS", 5),bg="#b4b0f7",command = lambda:parar_o_reanudar_musica(paused))
-        self.mute.place(x=350,y=520, width=80, height=30)
+        self.mute.place(x=550,y=670, width=80, height=30)
         
         #entrada de texto para el nombre
         self.player_name = Entry(self.canvas)
-        self.player_name.place(x=377,y=155,width=100,height=30)
+        self.player_name.place(x=550,y=155,width=100,height=30)
 
         #Radiobotton con el primer nivel
         self.level_2 = Radiobutton(self.canvas,text="Intermedio",variable=valorRango, value=2,bg="#b4b0f7")
-        self.level_2.place(x=360,y=186,width=80,height=20)
+        self.level_2.place(x=560,y=186,width=80,height=20)
 
         #Radiobotton con el segundo nivel
         self.level_1 = Radiobutton(self.canvas,text="Facil", variable=valorRango,value=1,bg="#b4b0f7")
-        self.level_1.place(x=278,y=186,width=70,height=20)
+        self.level_1.place(x=480,y=186,width=70,height=20)
 
         self.level_3 = Radiobutton(self.canvas,text="Dificil",  variable=valorRango,value=3,bg="#b4b0f7")
-        self.level_3.place(x=450,y=186,width=70,height=20)
+        self.level_3.place(x=650,y=186,width=70,height=20)
 
         # boton jugar para llamar al metodo que hace las validaciones
         self.boton_jugar = Button(self.canvas, text="Jugar", font=("Times New Roman", 16),bg="#b4b0f7", command=self.validaciones)
-        self.boton_jugar.place(x=350,y=210,width=100,height=30)
+        self.boton_jugar.place(x=550,y=210,width=100,height=30)
 
         self.button_mostrar = Button(self.canvas, text ="Creditos", fg="black", bg="#6e67ed", command = self.creditos)
-        self.button_mostrar.place(x=3,y=520,width=100,height=30)
+        self.button_mostrar.place(x=3,y=670,width=100,height=30)
         self.button_mostrar = Button(self.canvas, text ="Puntajes", fg="black", bg="#b4b0f7", command = self.puntajes)
-        self.button_mostrar.place(x=697,y=520,width=100,height=30)
+        self.button_mostrar.place(x=1100,y=670,width=100,height=30)
         
         
     #ventana de puntajes
     def puntajes(self):
-        self.canvas = Canvas(self.master, width=796, height=800, relief='ridge',bg="#b4b0f7")
+        self.canvas = Canvas(self.master, width=1200, height=700, relief='ridge',bg="#b4b0f7")
         self.canvas.place(x=0, y=0)
         self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
         self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
@@ -100,7 +100,7 @@ class Pantalla_principal:
    
     #ventana about con labels que muestran informacion importante
     def creditos(self):
-        self.canvas = Canvas(self.master, width=796, height=550, relief='ridge',bg="#b4b0f7")
+        self.canvas = Canvas(self.master, width=1200, height=700, relief='ridge',bg="#b4b0f7")
         self.canvas.place(x=0, y=0)
         self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
         self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
@@ -162,17 +162,17 @@ class Pantalla_principal:
     def primerNivel(self):
         global parar
         global Nave
-        self.canvas = Canvas(self.master, width=796, height=500, relief='ridge',bg="black")
+        self.canvas = Canvas(self.master, width=1200, height=650, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
-        self.canvasdos = Canvas(self.master, width=796, height=46, relief='ridge',bg="black")
-        self.canvasdos.place(x=0, y=500)
+        self.canvasdos = Canvas(self.master, width=1197, height=46, relief='ridge',bg="black")
+        self.canvasdos.place(x=0, y=650)
  
         
         self.sequence = [ImageTk.PhotoImage(img)
                             for img in ImageSequence.Iterator(
                                     Image.open(
                                     r'wow.gif'))]
-        self.image = self.canvas.create_image(400,250, image=self.sequence[0])
+        self.image = self.canvas.create_image(600,350, image=self.sequence[0])
         
         def animate(counter):
             self.canvas.itemconfig(self.image, image=self.sequence[counter])
@@ -189,7 +189,7 @@ class Pantalla_principal:
         
          #boton de retorno a la pantalla de inicio
         self.boton_retorno = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.retorno)
-        self.boton_retorno.place(x=747,y=3, width=50, height=20)
+        self.boton_retorno.place(x=1149,y=3, width=50, height=20)
 
         #label para mostrar la vida de la nave
         self.vidanave= Label(self.canvasdos,text="vida: 3",font=("Comic Sans MS", 8),fg="red",bg="black")
@@ -223,12 +223,12 @@ class Pantalla_principal:
                 paused = True
      
         self.mute = Button(self.canvasdos, text="Mute or UnMute",font=("Comic Sans MS", 5),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
-        self.mute.place(x=747,y=20, width=50, height=20)
+        self.mute.place(x=1149,y=20, width=50, height=20)
    
 
         #importa y coloca la img de la nave
         self.Nave=ImageTk.PhotoImage(Image.open("nave.png"))
-        self.nave_N1 = self.canvas.create_image(250,402,image=self.Nave, anchor=NW)
+        self.nave_N1 = self.canvas.create_image(550,555,image=self.Nave, anchor=NW)
 
 
         
@@ -278,28 +278,31 @@ class Pantalla_principal:
             rebotedebalas_aux(enemigotres,1,7)
             rebotedebalas_aux(enemigocuatro,1,7)
             rebotedebalas_aux(enemigocinco,1,7)
-            #self.canvas.after(100,rebotedebalas)
+    
 
         def rebotedebalas_aux(enemigo, x , y):
-            
+
             area_nave = self.canvas.bbox(self.nave_N1)
             #daño caja boss
             area_Misil = self.canvas.bbox(enemigo)
             self.canvas.move(enemigo, x, y)
             #obtiene coordenadas del enemigo en el eje x,y
             try:
-                if self.canvas.coords(enemigo)[0] > 760 or self.canvas.coords(enemigo)[0] < 0: # y range
+                if self.canvas.coords(enemigo)[0] > 1140 or self.canvas.coords(enemigo)[0] < 0: # y range
                         x = -x
+
                         
                         t5 = Thread(target= sonido_choque)
                         t5.start()
+
                         
-                if self.canvas.coords(enemigo)[1] > 450 or self.canvas.coords(enemigo)[1] < 0: # x range
+                if self.canvas.coords(enemigo)[1] > 610 or self.canvas.coords(enemigo)[1] < 0: # x range
                         y = -y
                         
+
                         t5 = Thread(target= sonido_choque)
                         t5.start()
-                        
+
                 if (area_nave[2]>area_Misil[0]>area_nave[0]) and (area_nave[1]<area_Misil[3]<area_nave[3]):
                         self.canvas.delete(enemigo)
                         global Nave
@@ -309,6 +312,7 @@ class Pantalla_principal:
                             return self.juego_perdido()
             except IndexError:#controla el error y elimina la bala del enemigo
                  self.canvas.delete(enemigo)
+
             self.canvas.after(10,lambda:rebotedebalas_aux(enemigo,x,y))
         rebotedebalas()
 
@@ -316,11 +320,11 @@ class Pantalla_principal:
         #verifica las teclas y realiza el movimiento de la nave
         def movimiento_nave(mover):
             try:
-                if mover.keysym=='Right' and self.canvas.coords(self.nave_N1)[0]<745:#derecha
+                if mover.keysym=='Right' and self.canvas.coords(self.nave_N1)[0]<1140:#derecha
                     self.canvas.move(self.nave_N1, 15, 0)
                 if mover.keysym=='Left' and self.canvas.coords(self.nave_N1)[0]>0:#izquierda
                     self.canvas.move(self.nave_N1, -15, 0)   
-                if mover.keysym=='Down' and self.canvas.coords(self.nave_N1)[1]<405:#abajo
+                if mover.keysym=='Down' and self.canvas.coords(self.nave_N1)[1]<565:#abajo
                     self.canvas.move(self.nave_N1, 0, 15)
                 if mover.keysym=='Up' and self.canvas.coords(self.nave_N1)[1]>0:#arriba
                     self.canvas.move(self.nave_N1, 0, -15)
@@ -347,15 +351,15 @@ class Pantalla_principal:
     #segundo nivel del juego
     def segundoNivel(self):
         global puntaje
-        self.canvas = Canvas(self.master, width=796, height=500, relief='ridge',bg="black")
+        self.canvas = Canvas(self.master, width=1200, height=700, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
-        self.canvasdos = Canvas(self.master, width=796, height=46, relief='ridge',bg="black")
-        self.canvasdos.place(x=0, y=500)
+        self.canvasdos = Canvas(self.master, width=1197, height=46, relief='ridge',bg="black")
+        self.canvasdos.place(x=0, y=650)
         self.sequence = [ImageTk.PhotoImage(img)
                             for img in ImageSequence.Iterator(
                                     Image.open(
                                     r'clockword.gif'))]
-        self.image = self.canvas.create_image(400,250, image=self.sequence[0])
+        self.image = self.canvas.create_image(600,350, image=self.sequence[0])
         
         def animate(counter):
             self.canvas.itemconfig(self.image, image=self.sequence[counter])
@@ -369,9 +373,9 @@ class Pantalla_principal:
         
         #boton de retorno a la pantalla de inicio
         self.boton_retorno2 = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.retorno)
-        self.boton_retorno2.place(x=747,y=3, width=50, height=20)
+        self.boton_retorno2.place(x=1149,y=3, width=50, height=20)
         self.mute = Button(self.canvasdos, text="Mute",font=("Comic Sans MS", 5),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
-        self.mute.place(x=747,y=20, width=50, height=20)
+        self.mute.place(x=1149,y=20, width=50, height=20)
 
         #label para mostrar la vida de la nave
         self.vidanave2= Label(self.canvasdos,text="vida: 3",font=("Comic Sans MS", 8),fg="red",bg="black")
@@ -391,7 +395,7 @@ class Pantalla_principal:
 
         #importa img de la nave
         self.Nave2=ImageTk.PhotoImage(Image.open("nave.png"))
-        self.nave_N2 = self.canvas.create_image(250,402,image=self.Nave2, anchor=NW)
+        self.nave_N2 = self.canvas.create_image(550,555,image=self.Nave2, anchor=NW)
 
         #importa img de las balas de la nave y el enemigo
         progreso = Progressbar(self.canvasdos, orient = HORIZONTAL,length = 100, mode = 'determinate')
@@ -433,11 +437,11 @@ class Pantalla_principal:
         #verifica las teclas y realiza el movimiento de la nave
         def mover_nave_2(mover):
             try:
-                if mover.keysym=='Right' and self.canvas.coords(self.nave_N2)[0]<745:#derecha
+                if mover.keysym=='Right' and self.canvas.coords(self.nave_N2)[0]<1140:#derecha
                     self.canvas.move(self.nave_N2, 15, 0)
                 if mover.keysym=='Left' and self.canvas.coords(self.nave_N2)[0]>0:#izquierda
                     self.canvas.move(self.nave_N2, -15, 0)   
-                if mover.keysym=='Down' and self.canvas.coords(self.nave_N2)[1]<405:#abajo
+                if mover.keysym=='Down' and self.canvas.coords(self.nave_N2)[1]<565:#abajo
                     self.canvas.move(self.nave_N2, 0, 15)
                 if mover.keysym=='Up' and self.canvas.coords(self.nave_N2)[1]>0:#arriba
                     self.canvas.move(self.nave_N2, 0, -15)
@@ -496,9 +500,9 @@ class Pantalla_principal:
             self.canvas.move(enemigo, x, y)
             #obtiene coordenadas del enemigo en el eje x,y
             try:
-                if self.canvas.coords(enemigo)[0] > 760 or self.canvas.coords(enemigo)[0] < 0: # y range
+                if self.canvas.coords(enemigo)[0] > 1140 or self.canvas.coords(enemigo)[0] < 0: # y range
                         x = -x
-                if self.canvas.coords(enemigo)[1] > 450 or self.canvas.coords(enemigo)[1] < 0: # x range
+                if self.canvas.coords(enemigo)[1] > 610 or self.canvas.coords(enemigo)[1] < 0: # x range
                         y = -y
                 if (area_nave[2]>area_Misil[0]>area_nave[0]) and (area_nave[1]<area_Misil[3]<area_nave[3]):
                         self.canvas.delete(enemigo)
@@ -515,15 +519,15 @@ class Pantalla_principal:
     def tercerNivel(self):
         global puntaje
         global no_dispare#global para detener el disparo del enemigo
-        self.canvas = Canvas(self.master, width=796, height=500, relief='ridge',bg="#1d2086")
+        self.canvas = Canvas(self.master, width=1200, height=700, relief='ridge',bg="#1d2086")
         self.canvas.place(x=0, y=0)
-        self.canvasdos = Canvas(self.master, width=796, height=46, relief='ridge',bg="black")
-        self.canvasdos.place(x=0, y=500)
+        self.canvasdos = Canvas(self.master, width=1197, height=46, relief='ridge',bg="black")
+        self.canvasdos.place(x=0, y=650)
         self.sequence = [ImageTk.PhotoImage(img)
                             for img in ImageSequence.Iterator(
                                     Image.open(
                                     r'zafkiel.gif'))]
-        self.image = self.canvas.create_image(400,250, image=self.sequence[0])
+        self.image = self.canvas.create_image(600,350, image=self.sequence[0])
         
         def animate(counter):
             self.canvas.itemconfig(self.image, image=self.sequence[counter])
@@ -540,15 +544,15 @@ class Pantalla_principal:
 
         #importa imagen de la nave del nivel 3
         self.nave_N3_img=ImageTk.PhotoImage(Image.open("nave.png"))
-        self.nave_N3 = self.canvas.create_image(250,405,image=self.nave_N3_img, anchor=NW)#coloca la imagen en la ventana
+        self.nave_N3 = self.canvas.create_image(550,555,image=self.nave_N3_img, anchor=NW)#coloca la imagen en la ventana
 
         
 
         #boton de retorno a la pantalla de inicio
         self.boton_retorno3 = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.retorno)
-        self.boton_retorno3.place(x=747,y=3, width=50, height=20)
+        self.boton_retorno3.place(x=1149,y=3, width=50, height=20)
         self.mute = Button(self.canvasdos, text="Mute",font=("Comic Sans MS", 5),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
-        self.mute.place(x=747,y=20, width=50, height=20)
+        self.mute.place(x=1149,y=20, width=50, height=20)
 
         #label para mostrar la vida de la nave
         self.vidanave3= Label(self.canvasdos,text="vida: 3",font=("Comic Sans MS", 8),fg="red",bg="black")
@@ -602,11 +606,11 @@ class Pantalla_principal:
                 
         def mover_nave3(mover):
             try:
-                if mover.keysym=='Right' and self.canvas.coords(self.nave_N3)[0]<745:#se mueve a la derecha hasta el limite
+                if mover.keysym=='Right' and self.canvas.coords(self.nave_N3)[0]<1140:#se mueve a la derecha hasta el limite
                     self.canvas.move(self.nave_N3, 15, 0)
                 if mover.keysym=='Left' and self.canvas.coords(self.nave_N3)[0]>0:#se mueve a la izquierda hasta el limite
                     self.canvas.move(self.nave_N3, -15, 0)   
-                if mover.keysym=='Down' and self.canvas.coords(self.nave_N3)[1]<405:#se mueve abajo hasta el limite
+                if mover.keysym=='Down' and self.canvas.coords(self.nave_N3)[1]<565:#se mueve abajo hasta el limite
                     self.canvas.move(self.nave_N3, 0, 15)
                 if mover.keysym=='Up' and self.canvas.coords(self.nave_N3)[1]>0:#se mueve arriba hasta el limite
                     self.canvas.move(self.nave_N3, 0, -15)
@@ -668,9 +672,9 @@ class Pantalla_principal:
             self.canvas.move(enemigo, x, y)
             #obtiene coordenadas del enemigo en el eje x,y
             try:
-                if self.canvas.coords(enemigo)[0] > 760 or self.canvas.coords(enemigo)[0] < 0: # y range
+                if self.canvas.coords(enemigo)[0] > 1140 or self.canvas.coords(enemigo)[0] < 0: # y range
                         x = -x
-                if self.canvas.coords(enemigo)[1] > 450 or self.canvas.coords(enemigo)[1] < 0: # x range
+                if self.canvas.coords(enemigo)[1] > 610 or self.canvas.coords(enemigo)[1] < 0: # x range
                         y = -y
                 if (area_nave[2]>area_Misil[0]>area_nave[0]) and (area_nave[1]<area_Misil[3]<area_nave[3]):
                         self.canvas.delete(enemigo)
@@ -775,7 +779,7 @@ window.config(cursor="pirate")
 ventana_principal = Pantalla_principal(window)
 window.title("space")
 window.configure(bg="red")
-window.minsize(800, 550)
+window.minsize(1200, 700)
 window.resizable(False, False)
 window.mainloop()
 
