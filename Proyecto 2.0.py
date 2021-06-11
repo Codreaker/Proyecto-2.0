@@ -14,8 +14,6 @@ minutos=0
 minutos_nivel_dos = 0
 minutos_nivel_tres = 0
 parar = True
-xspeed = 1 
-yspeed = 4
 pasa = True
 
 # clase donde estara el juego con ambas ventanas
@@ -254,6 +252,12 @@ class Pantalla_principal:
             self.segundos += 1
             self.canvas.after(1000,cronometro_N1)#repite la funcion cada segundo
         cronometro_N1()
+
+        def sonido_choque():
+            sonido_choque = pygame.mixer.Sound("golpe.mp3")
+            sonido_choque.play()
+            
+        
         def rebotedebalas():
             ran = randint(0,795)
             randos = randint(0,795)
@@ -277,8 +281,6 @@ class Pantalla_principal:
             #self.canvas.after(100,rebotedebalas)
 
         def rebotedebalas_aux(enemigo, x , y):
-            sonido_choque = pygame.mixer.Sound("golpe.mp3")
-            
             
             area_nave = self.canvas.bbox(self.nave_N1)
             #daño caja boss
@@ -288,12 +290,16 @@ class Pantalla_principal:
             try:
                 if self.canvas.coords(enemigo)[0] > 760 or self.canvas.coords(enemigo)[0] < 0: # y range
                         x = -x
-                    
-                        sonido_choque.play()
+                        
+                        t5 = Thread(target= sonido_choque)
+                        t5.start()
+                        
                 if self.canvas.coords(enemigo)[1] > 450 or self.canvas.coords(enemigo)[1] < 0: # x range
                         y = -y
                         
-                        sonido_choque.play()
+                        t5 = Thread(target= sonido_choque)
+                        t5.start()
+                        
                 if (area_nave[2]>area_Misil[0]>area_nave[0]) and (area_nave[1]<area_Misil[3]<area_nave[3]):
                         self.canvas.delete(enemigo)
                         global Nave
@@ -303,7 +309,6 @@ class Pantalla_principal:
                             return self.juego_perdido()
             except IndexError:#controla el error y elimina la bala del enemigo
                  self.canvas.delete(enemigo)
-            sonido_choque.play()
             self.canvas.after(10,lambda:rebotedebalas_aux(enemigo,x,y))
         rebotedebalas()
 
