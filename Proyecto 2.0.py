@@ -174,10 +174,12 @@ class Pantalla_principal:
                                     r'wow.gif'))]
         self.image = self.canvas.create_image(600,350, image=self.sequence[0])
         
+        
         def animate(counter):
             self.canvas.itemconfig(self.image, image=self.sequence[counter])
             self.canvas.after(100, lambda: animate((counter+1) % len(self.sequence)))
         animate(1)
+        
 
 
         pygame.init()
@@ -187,7 +189,7 @@ class Pantalla_principal:
         
 
         
-         #boton de retorno a la pantalla de inicio
+        #boton de retorno a la pantalla de inicio
         self.boton_retorno = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.retorno)
         self.boton_retorno.place(x=1149,y=3, width=50, height=20)
 
@@ -459,6 +461,14 @@ class Pantalla_principal:
                 self.canvasdos.update_idletasks()
         t2 = Thread(target= barra_de_progreso_2)
         t2.start()
+
+
+
+
+
+        def sonido_choquedos():
+            sonido_choquedos = pygame.mixer.Sound("golpe.mp3")
+            sonido_choquedos.play()
         def rebotedebalas():
             ran = randint(0,795)
             randos = randint(0,795)
@@ -502,8 +512,14 @@ class Pantalla_principal:
             try:
                 if self.canvas.coords(enemigo)[0] > 1140 or self.canvas.coords(enemigo)[0] < 0: # y range
                         x = -x
+                        t01 = Thread(target= sonido_choquedos)
+                        t01.start()
+                        
                 if self.canvas.coords(enemigo)[1] > 610 or self.canvas.coords(enemigo)[1] < 0: # x range
                         y = -y
+                        t01 = Thread(target= sonido_choquedos)
+                        t01.start()
+                        
                 if (area_nave[2]>area_Misil[0]>area_nave[0]) and (area_nave[1]<area_Misil[3]<area_nave[3]):
                         self.canvas.delete(enemigo)
                         global Nave
@@ -628,6 +644,15 @@ class Pantalla_principal:
                 window.update_idletasks()
         t3 = Thread(target= barra_de_progreso_3)
         t3.start()
+
+
+
+
+
+
+        def sonido_choquetres():
+            sonido_choquetres = pygame.mixer.Sound("Tic_Tac.mp3")
+            sonido_choquetres.play()
         def rebotedebalas():
             ran = randint(0,700)
             randos = randint(0,700)
@@ -674,8 +699,12 @@ class Pantalla_principal:
             try:
                 if self.canvas.coords(enemigo)[0] > 1140 or self.canvas.coords(enemigo)[0] < 0: # y range
                         x = -x
+                        t02 = Thread(target= sonido_choquetres)
+                        t02.start()
                 if self.canvas.coords(enemigo)[1] > 610 or self.canvas.coords(enemigo)[1] < 0: # x range
                         y = -y
+                        t02 = Thread(target= sonido_choquetres)
+                        t02.start()
                 if (area_nave[2]>area_Misil[0]>area_nave[0]) and (area_nave[1]<area_Misil[3]<area_nave[3]):
                         self.canvas.delete(enemigo)
                         global Nave
