@@ -14,6 +14,7 @@ minutos=0
 minutos_nivel_dos = 0
 minutos_nivel_tres = 0
 parar = True
+
 pasa = True
 
 # clase donde estara el juego con ambas ventanas
@@ -41,7 +42,6 @@ class Pantalla_principal:
         self.name_please = Label(self.canvas, text="Digite su nombre:", fg="#c44387", bg="#27433a")
         self.name_please.place(x=450,y=155,width=100,height=30)
 
-
         pygame.init()
         pygame.mixer.music.load("Musica.ogg")
         pygame.mixer.music.play(4)
@@ -57,6 +57,7 @@ class Pantalla_principal:
             else:
                 pygame.mixer.music.pause()
                 paused = True
+
 
         self.mute = Button(self.canvas, text="Mute",font=("Comic Sans MS", 5),bg="#b4b0f7",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=550,y=670, width=80, height=30)
@@ -145,17 +146,23 @@ class Pantalla_principal:
     # valida que el entry para nombre no este vacío y si hay un radiobutton seleccionado o no
     def validaciones(self):
         global nombre
-        
+        global pasa
         if self.player_name.get() != "":
             nombre +=self.player_name.get()
             if valorRango.get() == 1 or valorRango.get() == 0:
+                
                 self.primerNivel()
+                pasa = False
                 self.nombreJugador_N1.config(text=self.player_name.get())#obtiene el nombre del jugador y lo coloca en un label   
             if valorRango.get() == 2:
+
                 self.segundoNivel()
+                pasa = False
                 self.nombreJugador_N2.config(text=self.player_name.get())#obtiene el nombre del jugador y lo coloca en un label
             if valorRango.get() == 3:
+
                 self.tercerNivel()
+                pasa = False
                 self.nombreJugador_N3.config(text=self.player_name.get())#obtiene el nombre del jugador y lo coloca en un label
 
     # primer nivel del juego 
@@ -181,11 +188,9 @@ class Pantalla_principal:
         animate(1)
         
 
-
         pygame.init()
         pygame.mixer.music.load("MarieNoChouzetsuGikou-KarinNakanoSatoshiHono-5036166.mp3")
         pygame.mixer.music.play(4)
-        
         
 
         
@@ -367,11 +372,13 @@ class Pantalla_principal:
             self.canvas.itemconfig(self.image, image=self.sequence[counter])
             self.canvas.after(100, lambda: animate((counter+1) % len(self.sequence)))
         animate(1)
+  
+
+
 
         pygame.init()
         pygame.mixer.music.load("JitaiKyuuhen-KarinNakanoSatoshiHono-5036133.mp3")
         pygame.mixer.music.play(4)
-
         
         #boton de retorno a la pantalla de inicio
         self.boton_retorno2 = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.retorno)
@@ -469,6 +476,7 @@ class Pantalla_principal:
         def sonido_choquedos():
             sonido_choquedos = pygame.mixer.Sound("golpe.mp3")
             sonido_choquedos.play()
+
         def rebotedebalas():
             ran = randint(0,795)
             randos = randint(0,795)
@@ -550,13 +558,9 @@ class Pantalla_principal:
             self.canvas.after(120, lambda: animate((counter+1) % len(self.sequence)))
         animate(1)
 
-
-
         pygame.init()
         pygame.mixer.music.load("ElectronicWarfare-KarinNakanoSatoshiHono-5036030.mp3")
         pygame.mixer.music.play(4)
-
-
 
         #importa imagen de la nave del nivel 3
         self.nave_N3_img=ImageTk.PhotoImage(Image.open("nave.png"))
@@ -645,16 +649,12 @@ class Pantalla_principal:
         t3 = Thread(target= barra_de_progreso_3)
         t3.start()
 
-
-
-
-
-
         def sonido_choquetres():
             sonido_choquetres = pygame.mixer.Sound("Tic_Tac.mp3")
             sonido_choquetres.play()
+
         def rebotedebalas():
-            ran = randint(0,700)
+            ran = randint(0,100)
             randos = randint(0,700)
             rantres = randint(0,565)
             rancuatro = randint(0,735)
@@ -664,7 +664,7 @@ class Pantalla_principal:
             ranocho = randint(0,775)
             rannueve = randint(0,725)
             randies = randint(0,700)
-           
+            
             #crea las balas
             enemigo = self.canvas.create_image(ran, 20,image=self.enemiga, anchor=NW)
             enemigodos = self.canvas.create_image(randos, 70,image=self.enemiga, anchor=NW)
@@ -719,6 +719,7 @@ class Pantalla_principal:
 
 
     #verifica cuando el enemigo es derrotado y pasa al siguiente nivel
+      #verifica cuando el enemigo es derrotado y pasa al siguiente nivel
     def jefe_derrotado(self):
         global pasa
         global Nave
@@ -789,7 +790,7 @@ class Pantalla_principal:
         
         if Nave < 3: #verifica y restablece la vida de la nave
             Nave=3
-        pausa = False
+        pasa = False
         puntaje=0#restablece el puntaje
         minutos_nivel_dos = 0
         minutos_nivel_tres = 0
@@ -798,8 +799,6 @@ class Pantalla_principal:
         pygame.mixer.stop
         self.canvas.destroy()
         self.pantallaInicio()
-
-
 
 window = Tk()
 
