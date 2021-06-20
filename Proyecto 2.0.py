@@ -175,10 +175,7 @@ class Pantalla_principal:
         self.canvasdos.place(x=0, y=650)
  
         
-        self.sequence = [ImageTk.PhotoImage(img)
-                            for img in ImageSequence.Iterator(
-                                    Image.open(
-                                    r'wow.gif'))]
+        self.sequence = [ImageTk.PhotoImage(img)for img in ImageSequence.Iterator(Image.open(r'wow.gif'))]
         self.image = self.canvas.create_image(600,350, image=self.sequence[0])
         
         
@@ -250,6 +247,7 @@ class Pantalla_principal:
         #cronometro 
         def cronometro_N1():
             global minutos
+            global puntaje
             if self.segundos == 60:
                 minutos+=1
                 self.segundos=0
@@ -257,6 +255,8 @@ class Pantalla_principal:
                 return self.jefe_derrotado()
             self.tiempo_nivel1.configure(text="tiempo: "+str(minutos)+":"+ str(self.segundos))#actualiza el tiempo
             self.segundos += 1
+            puntaje += 1
+            self.puntaje.configure(text="puntaje: " + str(puntaje))
             self.canvas.after(1000,cronometro_N1)#repite la funcion cada segundo
         cronometro_N1()
 
@@ -370,15 +370,12 @@ class Pantalla_principal:
         
     #segundo nivel del juego
     def segundoNivel(self):
-        global puntaje
         self.canvas = Canvas(self.master, width=1200, height=700, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
         self.canvasdos = Canvas(self.master, width=1197, height=46, relief='ridge',bg="black")
         self.canvasdos.place(x=0, y=650)
         self.sequence = [ImageTk.PhotoImage(img)
-                            for img in ImageSequence.Iterator(
-                                    Image.open(
-                                    r'clockword.gif'))]
+                            for img in ImageSequence.Iterator(Image.open(r'clockword.gif'))]
         self.image = self.canvas.create_image(600,350, image=self.sequence[0])
         
         def animate(counter):
@@ -442,7 +439,7 @@ class Pantalla_principal:
                 paused = True
         #cronometro 
         def iniciar2():
-            global minutos_nivel_dos
+            global minutos_nivel_dos,puntaje
             if self.segundos2 == 60:
                 minutos_nivel_dos += 1
                 self.segundos2=0
@@ -450,6 +447,8 @@ class Pantalla_principal:
                 return self.jefe_derrotado()
             self.tiempo_nivel2.configure(text="tiempo: "+ str(minutos_nivel_dos)+":"+str(self.segundos2))#actualiza el tiempo
             self.segundos2 +=1
+            puntaje += 3
+            self.puntaje_N2.configure(text="puntaje: " + str(puntaje))
             self.canvas.after(1000,iniciar2)#repite el proceso cada segundo
         iniciar2()        
 
@@ -572,16 +571,13 @@ class Pantalla_principal:
         rebotedebalas()
 
     def tercerNivel(self):
-        global puntaje
         global no_dispare#global para detener el disparo del enemigo
         self.canvas = Canvas(self.master, width=1200, height=700, relief='ridge',bg="#1d2086")
         self.canvas.place(x=0, y=0)
         self.canvasdos = Canvas(self.master, width=1197, height=46, relief='ridge',bg="black")
         self.canvasdos.place(x=0, y=650)
         self.sequence = [ImageTk.PhotoImage(img)
-                            for img in ImageSequence.Iterator(
-                                    Image.open(
-                                    r'zafkiel.gif'))]
+                         for img in ImageSequence.Iterator(Image.open(r'zafkiel.gif'))]
         self.image = self.canvas.create_image(600,350, image=self.sequence[0])
         
         def animate(counter):
@@ -643,7 +639,7 @@ class Pantalla_principal:
 
         #cuenta el tiempo
         def cronometro_N3():
-            global minutos_nivel_tres
+            global minutos_nivel_tres,puntaje
             if self.segundos_N3 == 60:#verifica si se llego a 60 segundos
                 minutos_nivel_tres +=1#aumenta en 1 los minutos
                 self.segundos_N3=0
@@ -651,6 +647,8 @@ class Pantalla_principal:
                 return self.jefe_derrotado()
             self.tiempo_N3.configure(text="tiempo "+ str(minutos_nivel_tres)+":"+str(self.segundos_N3))#actualiza los segundos
             self.segundos_N3 +=1
+            puntaje += 5
+            self.puntaje_N3.configure(text="puntaje: " + str(puntaje))
             self.canvas.after(1000,cronometro_N3)#repite la funcion cada 1 segundo
         cronometro_N3()
 
