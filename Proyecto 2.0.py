@@ -821,6 +821,28 @@ class Pantalla_principal:
         Nave=3
         self.retorno()
 
+    def abrir_txt(self,persona,puntaje): 
+        archivo= open("archivo.txt","r") 
+        nombres = archivo.readlines() 
+        archivo.close() 
+        self.comparador(nombres,"",persona,puntaje,0) 
+
+    def comparador(self,lista, res , persona,puntaje,i): 
+        if i == 7: 
+            return self.actualizar(res) 
+        divisor = lista[0].split(";") 
+        actualPunt = int(divisor[1]) 
+        if actualPunt < puntaje: 
+            res += persona + ";" + str(puntaje)+ "\n" 
+            return self.comparador(lista,res,persona,0,i+1) 
+        self.comparador(lista[1:],res+lista[0],persona,puntaje,i+1) 
+             
+    def actualizar(self,nuevos): 
+        archivo = open("archivo.txt","w") 
+        archivo.write(nuevos) 
+        archivo.close()
+    
+
     #retorna a la pantalla principal desde cualquier ventana
     def retorno(self):
         global Nave
@@ -830,7 +852,7 @@ class Pantalla_principal:
         global pausa
         global minutos_nivel_dos
         global minutos_nivel_tres
-        
+        self.abrir_txt(nombre,puntaje)
         
         if Nave < 3: #verifica y restablece la vida de la nave
             Nave=3
