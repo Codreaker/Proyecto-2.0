@@ -273,10 +273,10 @@ class Pantalla_principal:
  
 
             #crea las balas
-            enemigo = self.canvas.create_image(ran, 100,image=self.enemiga, anchor=NW)
-            enemigodos = self.canvas.create_image(randos, 170,image=self.enemiga, anchor=NW)
-            enemigotres = self.canvas.create_image(rantres, 300,image=self.enemiga, anchor=NW)
-            enemigocuatro = self.canvas.create_image(rancuatro, 450,image=self.enemiga, anchor=NW)
+            enemigo = self.canvas.create_image(ran, 0,image=self.enemiga, anchor=NW)
+            enemigodos = self.canvas.create_image(randos, 0,image=self.enemiga, anchor=NW)
+            enemigotres = self.canvas.create_image(rantres, 0,image=self.enemiga, anchor=NW)
+            enemigocuatro = self.canvas.create_image(rancuatro, 0,image=self.enemiga, anchor=NW)
 
             
             #envia las balas creadas a la funcion que hace su movimiento
@@ -299,26 +299,26 @@ class Pantalla_principal:
                 # y es la velocidad
                 #Borde de arriba
                 if self.canvas.coords(enemigo)[1] < 0:
-                        y = randint(5,10)
-                        x = -randint(14,14)
+                        y = randint(5,7)
+                        x = -randint(5,9)
                         t5 = Thread(target= sonido_choque)
                         t5.start()
                 #Borde de abajo
                 if self.canvas.coords(enemigo)[1] > 610: # x range
-                        y = -randint(5,10)
-                        x = randint(-14,14)
+                        y = -randint(5,7)
+                        x = randint(-5,9)
                         t5 = Thread(target= sonido_choque)
                         t5.start()
                 #Borde de izquierda
                 if self.canvas.coords(enemigo)[0] < 0:
-                        x = randint(1,14)
-                        y = randint(-10,10)
+                        x = randint(5,9)
+                        y = randint(-5,7)
                         t5 = Thread(target= sonido_choque)
                         t5.start()
                 #Borde de derecha
                 if self.canvas.coords(enemigo)[0] > 1140: # y range
-                        x = -randint(1,14)
-                        y = randint(-10,10)
+                        x = -randint(5,9)
+                        y = randint(-5,7)
                         t5 = Thread(target= sonido_choque)
                         t5.start()
                 
@@ -535,28 +535,29 @@ class Pantalla_principal:
                 # y es la velocidad
                 #Borde de arriba
                 if self.canvas.coords(enemigo)[1] < 0:
-                        y = randint(5,10)
-                        x = -randint(14,14)
+                        y = randint(5,7)
+                        x = -randint(5,9)
                         t01 = Thread(target= sonido_choquedos)
                         t01.start()
                 #Borde de abajo
                 if self.canvas.coords(enemigo)[1] > 610: # x range
-                        y = -randint(5,10)
-                        x = randint(-14,14)
+                        y = -randint(5,7)
+                        x = randint(-5,9)
                         t01 = Thread(target= sonido_choquedos)
                         t01.start()
                 #Borde de izquierda
                 if self.canvas.coords(enemigo)[0] < 0:
-                        x = randint(1,14)
-                        y = randint(-10,10)
+                        x = randint(5,9)
+                        y = randint(-5,7)
                         t01 = Thread(target= sonido_choquedos)
                         t01.start()
                 #Borde de derecha
                 if self.canvas.coords(enemigo)[0] > 1140: # y range
-                        x = -randint(1,14)
-                        y = randint(-10,10)
+                        x = -randint(5,9)
+                        y = randint(-5,7)
                         t01 = Thread(target= sonido_choquedos)
                         t01.start()
+                        
                         
                 if (area_nave[2]>area_Misil[0]>area_nave[0]) and (area_nave[1]<area_Misil[3]<area_nave[3]):
                         self.canvas.delete(enemigo)
@@ -727,28 +728,29 @@ class Pantalla_principal:
                 # y es la velocidad
                 #Borde de arriba
                 if self.canvas.coords(enemigo)[1] < 0:
-                        y = randint(5,10)
-                        x = -randint(14,14)
+                        y = randint(5,7)
+                        x = -randint(5,9)
                         t02 = Thread(target= sonido_choquetres)
                         t02.start()
                 #Borde de abajo
                 if self.canvas.coords(enemigo)[1] > 610: # x range
-                        y = -randint(5,10)
-                        x = randint(-14,14)
+                        y = -randint(5,7)
+                        x = randint(-5,9)
                         t02 = Thread(target= sonido_choquetres)
                         t02.start()
                 #Borde de izquierda
                 if self.canvas.coords(enemigo)[0] < 0:
-                        x = randint(1,14)
-                        y = randint(-10,10)
+                        x = randint(5,9)
+                        y = randint(-5,7)
                         t02 = Thread(target= sonido_choquetres)
                         t02.start()
                 #Borde de derecha
                 if self.canvas.coords(enemigo)[0] > 1140: # y range
-                        x = -randint(1,14)
-                        y = randint(-10,10)
+                        x = -randint(5,9)
+                        y = randint(-5,7)
                         t02 = Thread(target= sonido_choquetres)
                         t02.start()
+                        
                 if (area_nave[2]>area_Misil[0]>area_nave[0]) and (area_nave[1]<area_Misil[3]<area_nave[3]):
                         self.canvas.delete(enemigo)
                         global Nave
