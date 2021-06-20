@@ -270,14 +270,14 @@ class Pantalla_principal:
             randos = randint(0,795)
             rantres = randint(0,795)
             rancuatro = randint(0,795)
-            rancinco = randint(0,790)
+ 
 
             #crea las balas
             enemigo = self.canvas.create_image(ran, 100,image=self.enemiga, anchor=NW)
             enemigodos = self.canvas.create_image(randos, 170,image=self.enemiga, anchor=NW)
             enemigotres = self.canvas.create_image(rantres, 300,image=self.enemiga, anchor=NW)
             enemigocuatro = self.canvas.create_image(rancuatro, 450,image=self.enemiga, anchor=NW)
-            enemigocinco = self.canvas.create_image(rancinco, 30,image=self.enemiga, anchor=NW)
+
             
             #envia las balas creadas a la funcion que hace su movimiento
                
@@ -285,8 +285,7 @@ class Pantalla_principal:
             rebotedebalas_aux(enemigodos,1,6)
             rebotedebalas_aux(enemigotres,1,9)
             rebotedebalas_aux(enemigocuatro,1,7)
-            rebotedebalas_aux(enemigocinco,1,8)
-    
+
 
         def rebotedebalas_aux(enemigo, x , y):
        
@@ -301,25 +300,25 @@ class Pantalla_principal:
                 #Borde de arriba
                 if self.canvas.coords(enemigo)[1] < 0:
                         y = randint(5,10)
-                        x = -randint(1,14)
+                        x = -randint(14,14)
                         t5 = Thread(target= sonido_choque)
                         t5.start()
                 #Borde de abajo
                 if self.canvas.coords(enemigo)[1] > 610: # x range
                         y = -randint(5,10)
-                        x = randint(1,14)
+                        x = randint(-14,14)
                         t5 = Thread(target= sonido_choque)
                         t5.start()
                 #Borde de izquierda
                 if self.canvas.coords(enemigo)[0] < 0:
                         x = randint(1,14)
-                        y = -randint(5,10)
+                        y = randint(-10,10)
                         t5 = Thread(target= sonido_choque)
                         t5.start()
                 #Borde de derecha
                 if self.canvas.coords(enemigo)[0] > 1140: # y range
                         x = -randint(1,14)
-                        y = randint(-5,10)
+                        y = randint(-10,10)
                         t5 = Thread(target= sonido_choque)
                         t5.start()
                 
@@ -499,7 +498,7 @@ class Pantalla_principal:
             rancinco = randint(0,790)
             ranseis = randint(0,795)
             ransiete = randint(0,790)
-            ranocho = randint(0,795)
+
           
            
             #crea las balas
@@ -510,7 +509,7 @@ class Pantalla_principal:
             enemigocinco = self.canvas.create_image(rancinco, 10,image=self.enemiga, anchor=NW)
             enemigoseis = self.canvas.create_image(ranseis, 240,image=self.enemiga, anchor=NW)
             enemigosiete = self.canvas.create_image(ransiete, 190,image=self.enemiga, anchor=NW)
-            enemigoocho = self.canvas.create_image(ranocho, 500,image=self.enemiga, anchor=NW)
+
          
             
             #envia las balas creadas a la funcion que hace su movimiento
@@ -521,7 +520,7 @@ class Pantalla_principal:
             rebotedebalas_aux(enemigocinco,1,8)
             rebotedebalas_aux(enemigoseis,1,6)
             rebotedebalas_aux(enemigosiete,1,7)
-            rebotedebalas_aux(enemigoocho,1,10)
+
            
             #self.canvas.after(100,rebotedebalas)
 
@@ -537,25 +536,25 @@ class Pantalla_principal:
                 #Borde de arriba
                 if self.canvas.coords(enemigo)[1] < 0:
                         y = randint(5,10)
-                        x = -randint(1,14)
+                        x = -randint(14,14)
                         t01 = Thread(target= sonido_choquedos)
                         t01.start()
                 #Borde de abajo
                 if self.canvas.coords(enemigo)[1] > 610: # x range
                         y = -randint(5,10)
-                        x = randint(1,14)
+                        x = randint(-14,14)
                         t01 = Thread(target= sonido_choquedos)
                         t01.start()
                 #Borde de izquierda
                 if self.canvas.coords(enemigo)[0] < 0:
                         x = randint(1,14)
-                        y = -randint(5,10)
+                        y = randint(-10,10)
                         t01 = Thread(target= sonido_choquedos)
                         t01.start()
                 #Borde de derecha
                 if self.canvas.coords(enemigo)[0] > 1140: # y range
                         x = -randint(1,14)
-                        y = randint(-5,10)
+                        y = randint(-10,10)
                         t01 = Thread(target= sonido_choquedos)
                         t01.start()
                         
@@ -693,8 +692,7 @@ class Pantalla_principal:
             ranseis = randint(0,715)
             ransiete = randint(0,725)
             ranocho = randint(0,775)
-            rannueve = randint(0,725)
-            randies = randint(0,700)
+
             
             #crea las balas
             enemigo = self.canvas.create_image(ran, 20,image=self.enemiga, anchor=NW)
@@ -705,8 +703,6 @@ class Pantalla_principal:
             enemigoseis = self.canvas.create_image(ranseis, 260,image=self.enemiga, anchor=NW)
             enemigosiete = self.canvas.create_image(ransiete, 400,image=self.enemiga, anchor=NW)
             enemigoocho = self.canvas.create_image(ranocho, 100,image=self.enemiga, anchor=NW)
-            enemigonueve = self.canvas.create_image(rannueve, 200,image=self.enemiga, anchor=NW)
-            enemigodies = self.canvas.create_image(randies, 300,image=self.enemiga, anchor=NW)
             
             #envia las balas creadas a la funcion que hace su movimiento
             rebotedebalas_aux(enemigo,1,7)
@@ -717,8 +713,7 @@ class Pantalla_principal:
             rebotedebalas_aux(enemigoseis,1,8)
             rebotedebalas_aux(enemigosiete,1,5)
             rebotedebalas_aux(enemigoocho,1,4)
-            rebotedebalas_aux(enemigonueve,1,6)
-            rebotedebalas_aux(enemigodies,1,4)
+
             #self.canvas.after(100,rebotedebalas)
 
         def rebotedebalas_aux(enemigo, x , y):
@@ -728,30 +723,30 @@ class Pantalla_principal:
             self.canvas.move(enemigo, x, y)
             #obtiene coordenadas del enemigo en el eje x,y
             try:
-                                # x es la gravedad
+                # x es la gravedad
                 # y es la velocidad
                 #Borde de arriba
                 if self.canvas.coords(enemigo)[1] < 0:
                         y = randint(5,10)
-                        x = -randint(1,14)
+                        x = -randint(14,14)
                         t02 = Thread(target= sonido_choquetres)
                         t02.start()
                 #Borde de abajo
                 if self.canvas.coords(enemigo)[1] > 610: # x range
                         y = -randint(5,10)
-                        x = randint(1,14)
+                        x = randint(-14,14)
                         t02 = Thread(target= sonido_choquetres)
                         t02.start()
                 #Borde de izquierda
                 if self.canvas.coords(enemigo)[0] < 0:
                         x = randint(1,14)
-                        y = -randint(5,10)
+                        y = randint(-10,10)
                         t02 = Thread(target= sonido_choquetres)
                         t02.start()
                 #Borde de derecha
                 if self.canvas.coords(enemigo)[0] > 1140: # y range
                         x = -randint(1,14)
-                        y = randint(-5,10)
+                        y = randint(-10,10)
                         t02 = Thread(target= sonido_choquetres)
                         t02.start()
                 if (area_nave[2]>area_Misil[0]>area_nave[0]) and (area_nave[1]<area_Misil[3]<area_nave[3]):
