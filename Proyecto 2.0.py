@@ -94,10 +94,64 @@ class Pantalla_principal:
         self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
         self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
         self.score = Label(self.canvas, text="Puntaje: ", font=("Helvetica", 15), fg="#f55cdf", bg="#b4b0f7")
-        self.score.place(x=200,y=30)
+        self.score.place(x=580,y=30)
         self.boton_back_punt = Button(self.canvas, text="Back",font=("Times New Roman", 18),bg="#b4b0f7",command=self.pantallaInicio)
-        self.boton_back_punt.place(x=350,y=520, width=80, height=30)
+        self.boton_back_punt.place(x=550,y=520, width=80, height=30)
+          
+        def abrir_puntajes(): 
+            archivo= open("archivo.txt","r") 
+            nombres = archivo.readlines()
+            archivo.close() 
+            separar(nombres)
+            
+        quicksort_L = Thread(target= abrir_puntajes)
+        quicksort_L.start()
 
+        def separar(lista):
+                i = 0
+                nombres=[]
+                puntaje=[]
+                while i != 7:  
+                    divisor = lista[0].split(";")
+                    puntaje += [int(divisor[1])]
+                    nombres += [divisor[0]]
+                    i += 1
+                    lista = lista[1:]
+                jugadores(nombres)
+                puntos(puntaje)
+                
+        def puntos(puntajes):
+            ordenado = quicksort(puntajes)
+            print(ordenado)
+            y1=120
+            for linea in ordenado:
+                self.mejores_puntajes= Label(self.canvas, text=linea, font=("Helvetica", 15), fg="black", bg="white").place(x=650,y=y1)
+                y1=y1 + 50
+                
+        def jugadores(nombres):
+            y1=120
+            for linea in nombres:
+                self.mejores= Label(self.canvas, text=linea, font=("Helvetica", 15), fg="black", bg="white").place(x=550,y=y1)
+                y1=y1 + 50
+
+        def quicksort(puntaje):
+            if len(puntaje) < 2:
+                return puntaje
+            indicador,mayor,menor = partir(puntaje)
+            print(indicador,menor,mayor)
+            return quicksort(menor) +[indicador]+ quicksort(mayor)
+
+        def partir(puntaje):
+            indicador = puntaje[0]
+            menor = []
+            mayor = []
+            for i in range(1,len(puntaje)):
+                if puntaje[i] < indicador:
+                    mayor.append(puntaje[i])
+                else:
+                    menor.append(puntaje[i])
+            return indicador,mayor,menor
+   
    
     #ventana about con labels que muestran informacion importante
     def creditos(self):
@@ -192,7 +246,7 @@ class Pantalla_principal:
 
         
         #boton de retorno a la pantalla de inicio
-        self.boton_retorno = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.retorno)
+        self.boton_retorno = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.puntaje_superado)
         self.boton_retorno.place(x=1149,y=3, width=50, height=20)
 
         #label para mostrar la vida de la nave
@@ -228,18 +282,12 @@ class Pantalla_principal:
      
         self.mute = Button(self.canvasdos, text="Mute or UnMute",font=("Comic Sans MS", 5),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=1149,y=20, width=50, height=20)
-   
 
         #importa y coloca la img de la nave
         self.Nave=ImageTk.PhotoImage(Image.open("nave.png"))
         self.nave_N1 = self.canvas.create_image(550,555,image=self.Nave, anchor=NW)
-
-
         
         self.enemiga = ImageTk.PhotoImage(Image.open("enemigo.png"))
-        
-        
-        
 
         #varible y llamada a la función de cronometro
         self.segundos=0
@@ -278,14 +326,11 @@ class Pantalla_principal:
             enemigotres = self.canvas.create_image(rantres, 0,image=self.enemiga, anchor=NW)
             enemigocuatro = self.canvas.create_image(rancuatro, 0,image=self.enemiga, anchor=NW)
 
-            
-            #envia las balas creadas a la funcion que hace su movimiento
-               
+            #envia las balas creadas a la funcion que hace su movimiento 
             rebotedebalas_aux(enemigo,1,5)
             rebotedebalas_aux(enemigodos,1,6)
             rebotedebalas_aux(enemigotres,1,9)
             rebotedebalas_aux(enemigocuatro,1,7)
-
 
         def rebotedebalas_aux(enemigo, x , y):
        
@@ -341,15 +386,15 @@ class Pantalla_principal:
         def movimiento_nave(mover):
             try:
                 if mover.keysym=='Right' and self.canvas.coords(self.nave_N1)[0]<1140:#derecha
-                    self.canvas.move(self.nave_N1, 15, 0)
+                    self.canvas.move(self.nave_N1, 25, 0)
                 if mover.keysym=='Left' and self.canvas.coords(self.nave_N1)[0]>0:#izquierda
-                    self.canvas.move(self.nave_N1, -15, 0)   
+                    self.canvas.move(self.nave_N1, -25, 0)   
                 if mover.keysym=='Down' and self.canvas.coords(self.nave_N1)[1]<565:#abajo
-                    self.canvas.move(self.nave_N1, 0, 15)
+                    self.canvas.move(self.nave_N1, 0, 25)
                 if mover.keysym=='Up' and self.canvas.coords(self.nave_N1)[1]>0:#arriba
-                    self.canvas.move(self.nave_N1, 0, -15)
+                    self.canvas.move(self.nave_N1, 0, -25)
             except IndexError:#controla el error y elimina la bala del enemigo
-                self.canvas.move(self.nave_N1, 15, 0)
+                self.canvas.move(self.nave_N1, 25, 0)
         self.master.bind("<KeyPress>", movimiento_nave)#para evento continuo de teclas
         
       
@@ -375,7 +420,7 @@ class Pantalla_principal:
         self.canvasdos = Canvas(self.master, width=1197, height=46, relief='ridge',bg="black")
         self.canvasdos.place(x=0, y=650)
         self.sequence = [ImageTk.PhotoImage(img)
-                            for img in ImageSequence.Iterator(Image.open(r'clockword.gif'))]
+                         for img in ImageSequence.Iterator(Image.open(r'clockword.gif'))]
         self.image = self.canvas.create_image(600,350, image=self.sequence[0])
         
         def animate(counter):
@@ -391,7 +436,7 @@ class Pantalla_principal:
         pygame.mixer.music.play(4)
         
         #boton de retorno a la pantalla de inicio
-        self.boton_retorno2 = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.retorno)
+        self.boton_retorno2 = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.puntaje_superado)
         self.boton_retorno2.place(x=1149,y=3, width=50, height=20)
         self.mute = Button(self.canvasdos, text="Mute",font=("Comic Sans MS", 5),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=1149,y=20, width=50, height=20)
@@ -437,6 +482,7 @@ class Pantalla_principal:
             else:
                 pygame.mixer.music.pause()
                 paused = True
+                
         #cronometro 
         def iniciar2():
             global minutos_nivel_dos,puntaje
@@ -452,23 +498,22 @@ class Pantalla_principal:
             self.canvas.after(1000,iniciar2)#repite el proceso cada segundo
         iniciar2()        
 
-        
-
                 
         #verifica las teclas y realiza el movimiento de la nave
         def mover_nave_2(mover):
             try:
                 if mover.keysym=='Right' and self.canvas.coords(self.nave_N2)[0]<1140:#derecha
-                    self.canvas.move(self.nave_N2, 15, 0)
+                    self.canvas.move(self.nave_N2, 25, 0)
                 if mover.keysym=='Left' and self.canvas.coords(self.nave_N2)[0]>0:#izquierda
-                    self.canvas.move(self.nave_N2, -15, 0)   
+                    self.canvas.move(self.nave_N2, -25, 0)   
                 if mover.keysym=='Down' and self.canvas.coords(self.nave_N2)[1]<565:#abajo
-                    self.canvas.move(self.nave_N2, 0, 15)
+                    self.canvas.move(self.nave_N2, 0, 25)
                 if mover.keysym=='Up' and self.canvas.coords(self.nave_N2)[1]>0:#arriba
-                    self.canvas.move(self.nave_N2, 0, -15)
+                    self.canvas.move(self.nave_N2, 0, -25)
             except IndexError:#controla el error y elimina la bala del enemigo
-                 self.canvas.move(self.nave_N2, 15, 0)
+                 self.canvas.move(self.nave_N2, 25, 0)
         self.master.bind("<KeyPress>",mover_nave_2)#para evento continuo de teclas
+        
         def barra_de_progreso_2():
             Limite = 60
             Tiempo = 0
@@ -482,9 +527,6 @@ class Pantalla_principal:
         t2.start()
 
 
-
-
-
         def sonido_choquedos():
             sonido_choquedos = pygame.mixer.Sound("golpe.mp3")
             sonido_choquedos.play()
@@ -495,10 +537,7 @@ class Pantalla_principal:
             rantres = randint(0,795)
             rancuatro = randint(0,795)
             rancinco = randint(0,790)
-            ranseis = randint(0,795)
-            ransiete = randint(0,790)
 
-          
            
             #crea las balas
             enemigo = self.canvas.create_image(ran, 100,image=self.enemiga, anchor=NW)
@@ -506,19 +545,13 @@ class Pantalla_principal:
             enemigotres = self.canvas.create_image(rantres, 300,image=self.enemiga, anchor=NW)
             enemigocuatro = self.canvas.create_image(rancuatro, 450,image=self.enemiga, anchor=NW)
             enemigocinco = self.canvas.create_image(rancinco, 10,image=self.enemiga, anchor=NW)
-            enemigoseis = self.canvas.create_image(ranseis, 240,image=self.enemiga, anchor=NW)
-            enemigosiete = self.canvas.create_image(ransiete, 190,image=self.enemiga, anchor=NW)
 
-         
-            
             #envia las balas creadas a la funcion que hace su movimiento
             rebotedebalas_aux(enemigo,1,7)
             rebotedebalas_aux(enemigodos,1,7)
             rebotedebalas_aux(enemigotres,1,6)
             rebotedebalas_aux(enemigocuatro,1,3)
             rebotedebalas_aux(enemigocinco,1,8)
-            rebotedebalas_aux(enemigoseis,1,6)
-            rebotedebalas_aux(enemigosiete,1,7)
 
            
             #self.canvas.after(100,rebotedebalas)
@@ -593,10 +626,9 @@ class Pantalla_principal:
         self.nave_N3_img=ImageTk.PhotoImage(Image.open("nave.png"))
         self.nave_N3 = self.canvas.create_image(550,555,image=self.nave_N3_img, anchor=NW)#coloca la imagen en la ventana
 
-        
 
         #boton de retorno a la pantalla de inicio
-        self.boton_retorno3 = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.retorno)
+        self.boton_retorno3 = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.puntaje_superado)
         self.boton_retorno3.place(x=1149,y=3, width=50, height=20)
         self.mute = Button(self.canvasdos, text="Mute",font=("Comic Sans MS", 5),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=1149,y=20, width=50, height=20)
@@ -656,13 +688,13 @@ class Pantalla_principal:
         def mover_nave3(mover):
             try:
                 if mover.keysym=='Right' and self.canvas.coords(self.nave_N3)[0]<1140:#se mueve a la derecha hasta el limite
-                    self.canvas.move(self.nave_N3, 15, 0)
+                    self.canvas.move(self.nave_N3, 25, 0)
                 if mover.keysym=='Left' and self.canvas.coords(self.nave_N3)[0]>0:#se mueve a la izquierda hasta el limite
-                    self.canvas.move(self.nave_N3, -15, 0)   
+                    self.canvas.move(self.nave_N3, -25, 0)   
                 if mover.keysym=='Down' and self.canvas.coords(self.nave_N3)[1]<565:#se mueve abajo hasta el limite
-                    self.canvas.move(self.nave_N3, 0, 15)
+                    self.canvas.move(self.nave_N3, 0, 25)
                 if mover.keysym=='Up' and self.canvas.coords(self.nave_N3)[1]>0:#se mueve arriba hasta el limite
-                    self.canvas.move(self.nave_N3, 0, -15)
+                    self.canvas.move(self.nave_N3, 0, -25)
             except IndexError:#controla el error y elimina la bala del enemigo
                  self.canvas.move(self.nave_N3, 15, 0)
         self.master.bind("<KeyPress>", mover_nave3)#realiza el evento de mantener pulsada las teclas
@@ -689,10 +721,7 @@ class Pantalla_principal:
             rancuatro = randint(0,735)
             rancinco = randint(0,770)
             ranseis = randint(0,715)
-            ransiete = randint(0,725)
-            ranocho = randint(0,775)
-
-            
+         
             #crea las balas
             enemigo = self.canvas.create_image(ran, 20,image=self.enemiga, anchor=NW)
             enemigodos = self.canvas.create_image(randos, 70,image=self.enemiga, anchor=NW)
@@ -700,9 +729,7 @@ class Pantalla_principal:
             enemigocuatro = self.canvas.create_image(rancuatro, 450,image=self.enemiga, anchor=NW)
             enemigocinco = self.canvas.create_image(rancinco, 10,image=self.enemiga, anchor=NW)
             enemigoseis = self.canvas.create_image(ranseis, 260,image=self.enemiga, anchor=NW)
-            enemigosiete = self.canvas.create_image(ransiete, 400,image=self.enemiga, anchor=NW)
-            enemigoocho = self.canvas.create_image(ranocho, 100,image=self.enemiga, anchor=NW)
-            
+
             #envia las balas creadas a la funcion que hace su movimiento
             rebotedebalas_aux(enemigo,1,7)
             rebotedebalas_aux(enemigodos,1,6)
@@ -710,8 +737,7 @@ class Pantalla_principal:
             rebotedebalas_aux(enemigocuatro,1,3)
             rebotedebalas_aux(enemigocinco,1,2)
             rebotedebalas_aux(enemigoseis,1,8)
-            rebotedebalas_aux(enemigosiete,1,5)
-            rebotedebalas_aux(enemigoocho,1,4)
+
 
             #self.canvas.after(100,rebotedebalas)
 
@@ -763,7 +789,7 @@ class Pantalla_principal:
 
 
     #verifica cuando el enemigo es derrotado y pasa al siguiente nivel
-      #verifica cuando el enemigo es derrotado y pasa al siguiente nivel
+    #verifica cuando el enemigo es derrotado y pasa al siguiente nivel
     def jefe_derrotado(self):
         global pasa
         global Nave
@@ -773,76 +799,68 @@ class Pantalla_principal:
         global minutos_nivel_tres
         
         if minutos == 1:#verifica el nivel 1
-            self.bonus()
             pasa = False
-            pygame.mixer.stop()
+            pygame.mixer.stop()#detiene la musica
             time.sleep(1)
             self.canvas.destroy()
             self.segundoNivel()
             self.nombreJugador_N2.configure(text=nombre)
      
         if minutos_nivel_dos == 1:#verifica el nivel 2
-            self.bonus()
-            pygame.mixer.stop()
+            pygame.mixer.stop()#detiene la musica
             self.canvas.destroy()
             time.sleep(1)
             self.tercerNivel()
             self.nombreJugador_N3.configure(text=nombre)
             
         if minutos_nivel_tres == 1:#verifica el nivel 3
-            self.bonus()
-            pygame.mixer.stop()
+            pygame.mixer.stop()#detiene la musica
             self.canvas.destroy()
             time.sleep(1)
-            self.retorno()
-
-    #verifica si se cumplen las condiciones para el bonus del puntaje
-    def bonus(self):
-        global minutos
-        global puntaje
-        global Nave
-        global minutos_nivel_dos
-        global minutos_nivel_tres
-        if minutos_nivel_tres==0:
-            puntaje +=20
-        if minutos_nivel_dos==0:
-            puntaje +=20
-        if minutos==0:
-            puntaje +=20
-        if Nave==3:
-            puntaje +=10 
+            self.puntaje_superado()
             
-     
-
-
     #verifica cuando la vida de la nave llega a 0 y llama a la función de retorno
     def juego_perdido(self):
         global Nave
         Nave=3
-        self.retorno()
+        self.puntaje_superado()
 
+    def puntaje_superado(self):
+        self.canvas.destroy()
+        global nombre, puntaje
+        self.canvas = Canvas(self.master, width=1200, height=700, relief='ridge',bg="black")
+        self.canvas.place(x=0, y=0)
+        self.posicion_obt = Label(self.canvas, text="No has conseguido superar ninguno de los mejores puntajes" ,font=("Comic Sans MS", 30),fg="red",bg="black")
+        self.posicion_obt.place(x=50, y=100)
+        self.retorno_p = Button(self.canvas, text="back",font=("Comic Sans MS", 14),fg="red",bg="black",command=self.retorno)
+        self.retorno_p.place(x=550,y=500, width=100, height=50)
+        self.abrir_txt(nombre,puntaje)
+        
     def abrir_txt(self,persona,puntaje): 
         archivo= open("archivo.txt","r") 
-        nombres = archivo.readlines() 
+        nombres = archivo.readlines()
         archivo.close() 
         self.comparador(nombres,"",persona,puntaje,0) 
 
-    def comparador(self,lista, res , persona,puntaje,i): 
+    def comparador(self,lista, res , persona,puntaje,i):
+        #mostrar = puntaje
         if i == 7: 
             return self.actualizar(res) 
-        divisor = lista[0].split(";") 
-        actualPunt = int(divisor[1]) 
+        divisor = lista[0].split(";")
+        print(divisor)
+        actualPunt = int(divisor[1])
         if actualPunt < puntaje: 
-            res += persona + ";" + str(puntaje)+ "\n" 
+            res += persona + ";" + str(puntaje)+ "\n"
+            self.posicion_obt.configure(text="Has obtenido la posición " + str(i+1)+" con un total de " + str(puntaje)+" puntos")
             return self.comparador(lista,res,persona,0,i+1) 
         self.comparador(lista[1:],res+lista[0],persona,puntaje,i+1) 
              
-    def actualizar(self,nuevos): 
+    def actualizar(self,nuevos):
+        print(nuevos)
         archivo = open("archivo.txt","w") 
         archivo.write(nuevos) 
         archivo.close()
     
-
     #retorna a la pantalla principal desde cualquier ventana
     def retorno(self):
         global Nave
@@ -852,7 +870,6 @@ class Pantalla_principal:
         global pausa
         global minutos_nivel_dos
         global minutos_nivel_tres
-        self.abrir_txt(nombre,puntaje)
         
         if Nave < 3: #verifica y restablece la vida de la nave
             Nave=3
@@ -867,7 +884,6 @@ class Pantalla_principal:
         self.pantallaInicio()
 
 window = Tk()
-
 valorRango = IntVar()
 window.config(cursor="pirate")
 ventana_principal = Pantalla_principal(window)
