@@ -14,15 +14,12 @@ minutos=0
 minutos_nivel_dos = 0
 minutos_nivel_tres = 0
 parar = True
-
 pasa = True
 
 # clase donde estara el juego con ambas ventanas
 class Pantalla_principal:
     def __init__(self, master):
         self.master = master
-        self.master_seg = master
-        self.master_ter = master
         self.canvas = Canvas(master, width=1200, height=700, highlightthickness=0, relief='ridge', bg="black")
         self.canvas.place(x=0, y=0)
         self.pantallaInicio()
@@ -59,7 +56,7 @@ class Pantalla_principal:
                 paused = True
 
 
-        self.mute = Button(self.canvas, text="Mute",font=("Comic Sans MS", 5),bg="#b4b0f7",command = lambda:parar_o_reanudar_musica(paused))
+        self.mute = Button(self.canvas, text="Mute",font=("Comic Sans MS", 12),bg="#b4b0f7",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=550,y=670, width=80, height=30)
         
         #entrada de texto para el nombre
@@ -81,9 +78,9 @@ class Pantalla_principal:
         self.boton_jugar = Button(self.canvas, text="Jugar", font=("Times New Roman", 16),bg="#b4b0f7", command=self.validaciones)
         self.boton_jugar.place(x=550,y=210,width=100,height=30)
 
-        self.button_mostrar = Button(self.canvas, text ="Creditos", fg="black", bg="#6e67ed", command = self.creditos)
+        self.button_mostrar = Button(self.canvas, text ="Creditos",font=("Comic Sans MS", 12), fg="yellow", bg="#6e67ed", command = self.creditos)
         self.button_mostrar.place(x=3,y=670,width=100,height=30)
-        self.button_mostrar = Button(self.canvas, text ="Puntajes", fg="black", bg="#b4b0f7", command = self.puntajes)
+        self.button_mostrar = Button(self.canvas, text ="Puntajes",font=("Comic Sans MS", 12), fg="yellow", bg="#b4b0f7", command = self.puntajes)
         self.button_mostrar.place(x=1100,y=670,width=100,height=30)
         
         
@@ -97,60 +94,66 @@ class Pantalla_principal:
         self.score.place(x=580,y=30)
         self.boton_back_punt = Button(self.canvas, text="Back",font=("Times New Roman", 18),bg="#b4b0f7",command=self.pantallaInicio)
         self.boton_back_punt.place(x=550,y=520, width=80, height=30)
-          
+
+        #abre el archivo .txt
         def abrir_puntajes(): 
             archivo= open("archivo.txt","r") 
-            nombres = archivo.readlines()
+            nombres = archivo.readlines() #guarda los nombres y puntajes en una variable
             archivo.close() 
-            separar(nombres)
+            separar(nombres)#llama a la funcion para separar los nombres y puntajes
             
-        quicksort_L = Thread(target= abrir_puntajes)
+        quicksort_L = Thread(target= abrir_puntajes) 
         quicksort_L.start()
 
+
         def separar(lista):
-                i = 0
+                i = 0 #contador
                 nombres=[]
                 puntaje=[]
                 while i != 7:  
-                    divisor = lista[0].split(";")
-                    puntaje += [int(divisor[1])]
-                    nombres += [divisor[0]]
-                    i += 1
-                    lista = lista[1:]
+                    divisor = lista[0].split(";")#separa el nombre y el puntaje y los convierte en lista
+                    puntaje += [int(divisor[1])]#guarda el puntaje en la variable como una lista
+                    nombres += [divisor[0]]#guarda el nombre en la variable como una lista
+                    i += 1 # aumenta el contador en 1
+                    lista = lista[1:]#corta la lista para ir al siguiente elemento
                 jugadores(nombres)
                 puntos(puntaje)
-                
+
+        #funcion para mostrar los puntajes en pantalla
         def puntos(puntajes):
             ordenado = quicksort(puntajes)
-            print(ordenado)
             y1=120
-            for linea in ordenado:
+            for linea in ordenado: #recorre la lista de puntajes
+                #coloca  los puntajes en la pantalla
                 self.mejores_puntajes= Label(self.canvas, text=linea, font=("Helvetica", 15), fg="black", bg="white").place(x=650,y=y1)
-                y1=y1 + 50
-                
+                y1=y1 + 50 #cambia la posicion en y en la que se muestran los puntajes 
+
+        #funcion para mostrar los nombres en pantalla
         def jugadores(nombres):
             y1=120
-            for linea in nombres:
+            for linea in nombres:#recorre la lista de nombres
+                #coloca  los nombres en la pantalla
                 self.mejores= Label(self.canvas, text=linea, font=("Helvetica", 15), fg="black", bg="white").place(x=550,y=y1)
-                y1=y1 + 50
+                y1=y1 + 50 #cambia la posicion en y en la que se muestran los nombres
 
+        #funcion quicksort que acomoda los puntajes en una lista ordenada
         def quicksort(puntaje):
-            if len(puntaje) < 2:
+            if len(puntaje) < 2:#verifica que la lista de puntajes contenga más de 1 elemento
                 return puntaje
-            indicador,mayor,menor = partir(puntaje)
-            print(indicador,menor,mayor)
-            return quicksort(menor) +[indicador]+ quicksort(mayor)
+            indicador,menor,mayor = partir(puntaje)#llama a la funcion que realiza el ordenamiento de la lista
+            return quicksort(mayor) +[indicador]+ quicksort(menor)#suma las listas ordenadas de los numeros mayores al indicador,el indicador y los menores al indicador
 
         def partir(puntaje):
-            indicador = puntaje[0]
+            indicador = puntaje[0]#obtiene el primer elemento de la lista que se utilizara para comparar con el resto de elementos
             menor = []
             mayor = []
-            for i in range(1,len(puntaje)):
-                if puntaje[i] < indicador:
-                    mayor.append(puntaje[i])
+            for i in range(1,len(puntaje)):#recorre la lista sin contar el primer elemento
+                print(indicador,menor,mayor)
+                if puntaje[i] < indicador:#compara el primer elemento con el resto de la lista
+                    menor += [puntaje[i]]#guarda en una lista los elementos menores al indicador
                 else:
-                    menor.append(puntaje[i])
-            return indicador,mayor,menor
+                    mayor += [puntaje[i]]#guarda en una lista los elementos menores al indicador
+            return indicador,menor,mayor#retorna la lista con los numeros menores, el inidcador , la lista con lo mayores
    
    
     #ventana about con labels que muestran informacion importante
@@ -246,24 +249,24 @@ class Pantalla_principal:
 
         
         #boton de retorno a la pantalla de inicio
-        self.boton_retorno = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.puntaje_superado)
+        self.boton_retorno = Button(self.canvasdos, text="back",font=("Comic Sans MS", 10),fg="red",bg="black",command=self.puntaje_superado)
         self.boton_retorno.place(x=1149,y=3, width=50, height=20)
 
         #label para mostrar la vida de la nave
-        self.vidanave= Label(self.canvasdos,text="vida: 3",font=("Comic Sans MS", 8),fg="red",bg="black")
-        self.vidanave.place(x=103, y=3)
+        self.vidanave= Label(self.canvasdos,text="vida: 3",font=("Comic Sans MS", 10),fg="red",bg="black")
+        self.vidanave.place(x=100, y=3)
 
         #nombre del jugador nivel 2
-        self.nombreJugador_N1 = Label(self.canvasdos, text="", font=("Comic Sans MS", 8),fg="red",bg="black")
-        self.nombreJugador_N1.place(x=275, y=3)
+        self.nombreJugador_N1 = Label(self.canvasdos, text="", font=("Comic Sans MS", 10),fg="red",bg="black")
+        self.nombreJugador_N1.place(x=400, y=3)
 
         #label para mostrar el puntaje
-        self.puntaje = Label(self.canvasdos, text="puntaje: " + str(puntaje),font=("Comic Sans MS", 8),fg="red",bg="black")
-        self.puntaje.place(x=147, y=3)
+        self.puntaje = Label(self.canvasdos, text="puntaje: " + str(puntaje),font=("Comic Sans MS", 10),fg="red",bg="black")
+        self.puntaje.place(x=200, y=3)
 
         #label para mostrar el tiempo
-        self.tiempo_nivel1 = Label(self.canvasdos, text="tiempo",font=("Comic Sans MS", 8),fg="red",bg="black")
-        self.tiempo_nivel1.place(x=207, y=3)
+        self.tiempo_nivel1 = Label(self.canvasdos, text="tiempo",font=("Comic Sans MS", 10),fg="red",bg="black")
+        self.tiempo_nivel1.place(x=600, y=3)
 
         #importa img de las balas de la nave y el enemigo
         progress = Progressbar(self.canvasdos, orient = HORIZONTAL,length = 100, mode = 'determinate')
@@ -280,7 +283,7 @@ class Pantalla_principal:
                 pygame.mixer.music.pause()
                 paused = True
      
-        self.mute = Button(self.canvasdos, text="Mute or UnMute",font=("Comic Sans MS", 5),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
+        self.mute = Button(self.canvasdos, text="Mute",font=("Comic Sans MS", 8),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=1149,y=20, width=50, height=20)
 
         #importa y coloca la img de la nave
@@ -436,26 +439,26 @@ class Pantalla_principal:
         pygame.mixer.music.play(4)
         
         #boton de retorno a la pantalla de inicio
-        self.boton_retorno2 = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.puntaje_superado)
+        self.boton_retorno2 = Button(self.canvasdos, text="back",font=("Comic Sans MS", 10),fg="red",bg="black",command=self.puntaje_superado)
         self.boton_retorno2.place(x=1149,y=3, width=50, height=20)
-        self.mute = Button(self.canvasdos, text="Mute",font=("Comic Sans MS", 5),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
+        self.mute = Button(self.canvasdos, text="Mute",font=("Comic Sans MS", 8),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=1149,y=20, width=50, height=20)
 
         #label para mostrar la vida de la nave
-        self.vidanave2= Label(self.canvasdos,text="vida: 3",font=("Comic Sans MS", 8),fg="red",bg="black")
-        self.vidanave2.place(x=103, y=3)
+        self.vidanave2= Label(self.canvasdos,text="vida: 3",font=("Comic Sans MS", 10),fg="red",bg="black")
+        self.vidanave2.place(x=100, y=3)
 
         #nombre del jugador nivel 2
-        self.nombreJugador_N2 = Label(self.canvasdos, text="", font=("Comic Sans MS", 8),fg="red",bg="black")
-        self.nombreJugador_N2.place(x=275, y=3)
+        self.nombreJugador_N2 = Label(self.canvasdos, text="", font=("Comic Sans MS", 10),fg="red",bg="black")
+        self.nombreJugador_N2.place(x=400, y=3)
 
         #label para mostrar el puntaje
-        self.puntaje_N2 = Label(self.canvasdos, text="puntaje: " + str(puntaje),font=("Comic Sans MS", 8),fg="red",bg="black")
-        self.puntaje_N2.place(x=147, y=3)
+        self.puntaje_N2 = Label(self.canvasdos, text="puntaje: " + str(puntaje),font=("Comic Sans MS", 10),fg="red",bg="black")
+        self.puntaje_N2.place(x=200, y=3)
 
         #label para mostrar el tiempo
-        self.tiempo_nivel2 = Label(self.canvasdos, text="tiempo",font=("Comic Sans MS", 8),fg="red",bg="black")
-        self.tiempo_nivel2.place(x=207, y=3)
+        self.tiempo_nivel2 = Label(self.canvasdos, text="tiempo",font=("Comic Sans MS", 10),fg="red",bg="black")
+        self.tiempo_nivel2.place(x=600, y=3)
 
         #importa img de la nave
         self.Nave2=ImageTk.PhotoImage(Image.open("nave.png"))
@@ -628,26 +631,26 @@ class Pantalla_principal:
 
 
         #boton de retorno a la pantalla de inicio
-        self.boton_retorno3 = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.puntaje_superado)
+        self.boton_retorno3 = Button(self.canvasdos, text="back",font=("Comic Sans MS", 10),fg="red",bg="black",command=self.puntaje_superado)
         self.boton_retorno3.place(x=1149,y=3, width=50, height=20)
-        self.mute = Button(self.canvasdos, text="Mute",font=("Comic Sans MS", 5),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
+        self.mute = Button(self.canvasdos, text="Mute",font=("Comic Sans MS", 8),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=1149,y=20, width=50, height=20)
 
         #label para mostrar la vida de la nave
-        self.vidanave3= Label(self.canvasdos,text="vida: 3",font=("Comic Sans MS", 8),fg="red",bg="black")
-        self.vidanave3.place(x=103, y=3)
+        self.vidanave3= Label(self.canvasdos,text="vida: 3",font=("Comic Sans MS", 10),fg="red",bg="black")
+        self.vidanave3.place(x=100, y=3)
 
         #nombre del jugador nivel 2
-        self.nombreJugador_N3 = Label(self.canvasdos, text="", font=("Comic Sans MS", 8),fg="red",bg="black")
-        self.nombreJugador_N3.place(x=275, y=3)
+        self.nombreJugador_N3 = Label(self.canvasdos, text="", font=("Comic Sans MS", 10),fg="red",bg="black")
+        self.nombreJugador_N3.place(x=400, y=3)
 
         #label para mostrar el puntaje
-        self.puntaje_N3 = Label(self.canvasdos, text="puntaje: " + str(puntaje),font=("Comic Sans MS", 8),fg="red",bg="black")
-        self.puntaje_N3.place(x=147, y=3)
+        self.puntaje_N3 = Label(self.canvasdos, text="puntaje: " + str(puntaje),font=("Comic Sans MS", 10),fg="red",bg="black")
+        self.puntaje_N3.place(x=200, y=3)
 
         #label para mostrar el tiempo
-        self.tiempo_N3 = Label(self.canvasdos, text="tiempo",font=("Comic Sans MS", 8),fg="red",bg="black")
-        self.tiempo_N3.place(x=207, y=3)
+        self.tiempo_N3 = Label(self.canvasdos, text="tiempo",font=("Comic Sans MS", 10),fg="red",bg="black")
+        self.tiempo_N3.place(x=600, y=3)
 
 
 
@@ -698,6 +701,7 @@ class Pantalla_principal:
             except IndexError:#controla el error y elimina la bala del enemigo
                  self.canvas.move(self.nave_N3, 15, 0)
         self.master.bind("<KeyPress>", mover_nave3)#realiza el evento de mantener pulsada las teclas
+        
         def barra_de_progreso_3():
             Limite = 60
             Tiempo = 0
@@ -825,6 +829,7 @@ class Pantalla_principal:
         Nave=3
         self.puntaje_superado()
 
+    #pantalla que muestra el mensaje de si supero o no un puntaje del top 7
     def puntaje_superado(self):
         self.canvas.destroy()
         global nombre, puntaje
@@ -835,26 +840,31 @@ class Pantalla_principal:
         self.retorno_p = Button(self.canvas, text="back",font=("Comic Sans MS", 14),fg="red",bg="black",command=self.retorno)
         self.retorno_p.place(x=550,y=500, width=100, height=50)
         self.abrir_txt(nombre,puntaje)
-        
-    def abrir_txt(self,persona,puntaje): 
+
+    #abre el archivo .txt
+    def abrir_txt(self,persona,puntaje):#tiene como argumentos el nombre y puntaje del jugador que finalizo partida 
         archivo= open("archivo.txt","r") 
-        nombres = archivo.readlines()
+        nombres = archivo.readlines()#guarda los nombres y puntajes en una variable
         archivo.close() 
-        self.comparador(nombres,"",persona,puntaje,0) 
+        self.comparador(nombres,"",persona,puntaje,0)#llama a la funcion que compara el puntaje con los del top 7 
 
     def comparador(self,lista, res , persona,puntaje,i):
-        #mostrar = puntaje
-        if i == 7: 
+        if i == 7: #contador que verifica que se revise hasta el 7 lugar
             return self.actualizar(res) 
-        divisor = lista[0].split(";")
-        print(divisor)
-        actualPunt = int(divisor[1])
-        if actualPunt < puntaje: 
-            res += persona + ";" + str(puntaje)+ "\n"
+        divisor = lista[0].split(";")#separa el nombre del puntaje y los guarda en una lista
+        actualPunt = int(divisor[1])#obtiene el puntaje de la lista y lo convierte en entero
+        
+        if actualPunt < puntaje: #compara si el puntaje obtenido es mayor a uno del top 7
+            
+            res += persona + ";" + str(puntaje)+ "\n"#guarda el nombre y puntaje del jugador en el string de resultado
+            
+            #usando el contador +1 se obtiene la posición que consiguió y se muestra en un label junto con el puntaje
             self.posicion_obt.configure(text="Has obtenido la posición " + str(i+1)+" con un total de " + str(puntaje)+" puntos")
-            return self.comparador(lista,res,persona,0,i+1) 
-        self.comparador(lista[1:],res+lista[0],persona,puntaje,i+1) 
-             
+            return self.comparador(lista,res,persona,0,i+1)#cambia el valor del puntaje a 0 para no reemplazar los demas puntajes menores
+        
+        self.comparador(lista[1:],res+lista[0],persona,puntaje,i+1)#guarda los datos del top 7 cuando el puntaje del jugador no es superior a alguno de estos
+
+    #funcion que obtiene la variable con los datos del nuevo top 7 y actualiza el archivo de texto con estos    
     def actualizar(self,nuevos):
         print(nuevos)
         archivo = open("archivo.txt","w") 
@@ -882,6 +892,7 @@ class Pantalla_principal:
         pygame.mixer.stop
         self.canvas.destroy()
         self.pantallaInicio()
+        
 
 window = Tk()
 valorRango = IntVar()
