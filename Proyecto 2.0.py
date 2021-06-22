@@ -7,14 +7,13 @@ from threading import Thread
 import time
 
 
-Nave = 3
-puntaje = 0
-nombre = ""
-minutos=0
-minutos_nivel_dos = 0
-minutos_nivel_tres = 0
-parar = True
-pasa = True
+Nave = 3 # Vida de la nave
+puntaje = 0 # Puntaje
+nombre = "" # Nombre
+minutos=0 #Minutos del nivel 1
+minutos_nivel_dos = 0  #Minutos del nivel 2
+minutos_nivel_tres = 0  #Minutos del nivel 3
+pasa = True  #Bandera 
 
 # clase donde estara el juego con ambas ventanas
 class Pantalla_principal:
@@ -29,6 +28,8 @@ class Pantalla_principal:
         
         self.canvas = Canvas(self.master, width=1200, height=700, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
+        
+        # Aqui se carga la imagen de fondo
         self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
         self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
 
@@ -39,10 +40,12 @@ class Pantalla_principal:
         self.name_please = Label(self.canvas, text="Digite su nombre:", fg="#c44387", bg="#27433a")
         self.name_please.place(x=450,y=155,width=100,height=30)
 
+        # Lugar donde se reproduce la muisca de fondo
         pygame.init()
         pygame.mixer.music.load("Musica.ogg")
         pygame.mixer.music.play(4)
-
+        
+        # Funcion para el boton de silenciar
         global paused
         paused = False
         def parar_o_reanudar_musica(is_paused):
@@ -55,43 +58,51 @@ class Pantalla_principal:
                 pygame.mixer.music.pause()
                 paused = True
 
-
-        self.mute = Button(self.canvas, text="Mute",font=("Comic Sans MS", 12),bg="#b4b0f7",command = lambda:parar_o_reanudar_musica(paused))
+        # Boton para silenciar
+        self.mute = Button(self.canvas, text="Mute",font=("Comic Sans MS", 5),bg="#b4b0f7",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=550,y=670, width=80, height=30)
         
         #entrada de texto para el nombre
         self.player_name = Entry(self.canvas)
         self.player_name.place(x=550,y=155,width=100,height=30)
 
-        #Radiobotton con el primer nivel
+        #Radiobotton con el primer nivel 1
         self.level_2 = Radiobutton(self.canvas,text="Intermedio",variable=valorRango, value=2,bg="#b4b0f7")
         self.level_2.place(x=560,y=186,width=80,height=20)
 
-        #Radiobotton con el segundo nivel
+        #Radiobotton con el segundo nivel 2
         self.level_1 = Radiobutton(self.canvas,text="Facil", variable=valorRango,value=1,bg="#b4b0f7")
         self.level_1.place(x=480,y=186,width=70,height=20)
-
+        
+        #Radiobotton con el segundo nivel 3
         self.level_3 = Radiobutton(self.canvas,text="Dificil",  variable=valorRango,value=3,bg="#b4b0f7")
         self.level_3.place(x=650,y=186,width=70,height=20)
 
         # boton jugar para llamar al metodo que hace las validaciones
         self.boton_jugar = Button(self.canvas, text="Jugar", font=("Times New Roman", 16),bg="#b4b0f7", command=self.validaciones)
         self.boton_jugar.place(x=550,y=210,width=100,height=30)
-
-        self.button_mostrar = Button(self.canvas, text ="Creditos",font=("Comic Sans MS", 12), fg="yellow", bg="#6e67ed", command = self.creditos)
+        
+        # Boton para mostrar los creditos
+        self.button_mostrar = Button(self.canvas, text ="Creditos", fg="black", bg="#6e67ed", command = self.creditos)
         self.button_mostrar.place(x=3,y=670,width=100,height=30)
-        self.button_mostrar = Button(self.canvas, text ="Puntajes",font=("Comic Sans MS", 12), fg="yellow", bg="#b4b0f7", command = self.puntajes)
+        # Boton para mostrar los puntajes
+        self.button_mostrar = Button(self.canvas, text ="Puntajes", fg="black", bg="#b4b0f7", command = self.puntajes)
         self.button_mostrar.place(x=1100,y=670,width=100,height=30)
+        
+
         
         
     #ventana de puntajes
     def puntajes(self):
         self.canvas = Canvas(self.master, width=1200, height=700, relief='ridge',bg="#b4b0f7")
         self.canvas.place(x=0, y=0)
+        # Aqui se carga la imagen de fondo
         self.imagen=ImageTk.PhotoImage(Image.open("gamef.png"))
         self.canvas.create_image(0, 0, image=self.imagen, anchor=NW)
+        # Lugar donde se mostrara el puntaje
         self.score = Label(self.canvas, text="Puntaje: ", font=("Helvetica", 15), fg="#f55cdf", bg="#b4b0f7")
         self.score.place(x=580,y=30)
+        # Boton para regresar ala pantalla principal
         self.boton_back_punt = Button(self.canvas, text="Back",font=("Times New Roman", 18),bg="#b4b0f7",command=self.pantallaInicio)
         self.boton_back_punt.place(x=550,y=520, width=80, height=30)
 
@@ -226,12 +237,14 @@ class Pantalla_principal:
     def primerNivel(self):
         global parar
         global Nave
+        # Canvas donde de mostrara el gif,nave,enemigos
         self.canvas = Canvas(self.master, width=1200, height=650, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
+        # Canvas donde se mostrara la info como el puntaje,vida,tiempo.nombre
         self.canvasdos = Canvas(self.master, width=1197, height=46, relief='ridge',bg="black")
         self.canvasdos.place(x=0, y=650)
  
-        
+        # Funcion para cargar el gif frame por frame y hacer su animacion
         self.sequence = [ImageTk.PhotoImage(img)for img in ImageSequence.Iterator(Image.open(r'wow.gif'))]
         self.image = self.canvas.create_image(600,350, image=self.sequence[0])
         
@@ -241,7 +254,7 @@ class Pantalla_principal:
             self.canvas.after(100, lambda: animate((counter+1) % len(self.sequence)))
         animate(1)
         
-
+        # Aqui se incia el reproductor de la musica de inicio
         pygame.init()
         pygame.mixer.music.load("MarieNoChouzetsuGikou-KarinNakanoSatoshiHono-5036166.mp3")
         pygame.mixer.music.play(4)
@@ -249,28 +262,30 @@ class Pantalla_principal:
 
         
         #boton de retorno a la pantalla de inicio
-        self.boton_retorno = Button(self.canvasdos, text="back",font=("Comic Sans MS", 10),fg="red",bg="black",command=self.puntaje_superado)
+        self.boton_retorno = Button(self.canvasdos, text="back",font=("Comic Sans MS", 8),fg="red",bg="black",command=self.puntaje_superado)
         self.boton_retorno.place(x=1149,y=3, width=50, height=20)
 
         #label para mostrar la vida de la nave
-        self.vidanave= Label(self.canvasdos,text="vida: 3",font=("Comic Sans MS", 10),fg="red",bg="black")
-        self.vidanave.place(x=100, y=3)
+        self.vidanave= Label(self.canvasdos,text="vida: 3",font=("Comic Sans MS", 8),fg="red",bg="black")
+        self.vidanave.place(x=103, y=3)
 
-        #nombre del jugador nivel 2
-        self.nombreJugador_N1 = Label(self.canvasdos, text="", font=("Comic Sans MS", 10),fg="red",bg="black")
-        self.nombreJugador_N1.place(x=400, y=3)
+        #nombre del jugador nivel 1
+        self.nombreJugador_N1 = Label(self.canvasdos, text="", font=("Comic Sans MS", 8),fg="red",bg="black")
+        self.nombreJugador_N1.place(x=275, y=3)
 
         #label para mostrar el puntaje
-        self.puntaje = Label(self.canvasdos, text="puntaje: " + str(puntaje),font=("Comic Sans MS", 10),fg="red",bg="black")
-        self.puntaje.place(x=200, y=3)
+        self.puntaje = Label(self.canvasdos, text="puntaje: " + str(puntaje),font=("Comic Sans MS", 8),fg="red",bg="black")
+        self.puntaje.place(x=147, y=3)
 
         #label para mostrar el tiempo
-        self.tiempo_nivel1 = Label(self.canvasdos, text="tiempo",font=("Comic Sans MS", 10),fg="red",bg="black")
-        self.tiempo_nivel1.place(x=600, y=3)
+        self.tiempo_nivel1 = Label(self.canvasdos, text="tiempo",font=("Comic Sans MS", 8),fg="red",bg="black")
+        self.tiempo_nivel1.place(x=207, y=3)
 
-        #importa img de las balas de la nave y el enemigo
+        #Funcion para mostrar la barra de progreso
         progress = Progressbar(self.canvasdos, orient = HORIZONTAL,length = 100, mode = 'determinate')
         progress.place(x=0,y=3)
+        
+        # Funcion para el boton de silenciar
         global paused
         paused = False
         def parar_o_reanudar_musica(is_paused):
@@ -282,14 +297,15 @@ class Pantalla_principal:
             else:
                 pygame.mixer.music.pause()
                 paused = True
-     
-        self.mute = Button(self.canvasdos, text="Mute",font=("Comic Sans MS", 8),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
+        # Boton para silenciar
+        self.mute = Button(self.canvasdos, text="Mute or UnMute",font=("Comic Sans MS", 5),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=1149,y=20, width=50, height=20)
 
         #importa y coloca la img de la nave
         self.Nave=ImageTk.PhotoImage(Image.open("nave.png"))
-        self.nave_N1 = self.canvas.create_image(550,555,image=self.Nave, anchor=NW)
         
+        self.nave_N1 = self.canvas.create_image(550,555,image=self.Nave, anchor=NW)
+        #impor img de los enemigos
         self.enemiga = ImageTk.PhotoImage(Image.open("enemigo.png"))
 
         #varible y llamada a la función de cronometro
@@ -310,13 +326,14 @@ class Pantalla_principal:
             self.puntaje.configure(text="puntaje: " + str(puntaje))
             self.canvas.after(1000,cronometro_N1)#repite la funcion cada segundo
         cronometro_N1()
-
+        # Funcion para que suene el choque de las balas
         def sonido_choque():
-            sonido_choque = pygame.mixer.Sound("golpe.mp3")
-            sonido_choque.play()
+            sonido_choque = pygame.mixer.Sound("golpe.mp3")#LLama ala musica
+            sonido_choque.play()# Reproduce
             
-        
+        # Funcion para el rebote de las balas
         def rebotedebalas():
+            #Generacion aleatoria
             ran = randint(0,795)
             randos = randint(0,795)
             rantres = randint(0,795)
@@ -336,9 +353,9 @@ class Pantalla_principal:
             rebotedebalas_aux(enemigocuatro,1,7)
 
         def rebotedebalas_aux(enemigo, x , y):
-       
+            #daño caja dela nave
             area_nave = self.canvas.bbox(self.nave_N1)
-            #daño caja boss
+            #daño caja del enemigo
             area_Misil = self.canvas.bbox(enemigo)
             self.canvas.move(enemigo, x, y)
             #obtiene coordenadas del enemigo en el eje x,y
@@ -400,7 +417,7 @@ class Pantalla_principal:
                 self.canvas.move(self.nave_N1, 25, 0)
         self.master.bind("<KeyPress>", movimiento_nave)#para evento continuo de teclas
         
-      
+        # Funcion para crear la barra de progreso
         def barra_de_progreso():
             global pasa
             pasa = True
@@ -410,7 +427,7 @@ class Pantalla_principal:
             while(Tiempo<Limite and pasa):
                 time.sleep(1)
                 progress["value"]+=(speed/Limite)*100
-                Tiempo+=speed
+                Tiempo+=speed # esto hace que avanse
                 window.update_idletasks()
         t1 = Thread(target= barra_de_progreso)
         t1.start()
@@ -418,10 +435,14 @@ class Pantalla_principal:
         
     #segundo nivel del juego
     def segundoNivel(self):
+        # Canvas donde de mostrara el gif,nave,enemigos
         self.canvas = Canvas(self.master, width=1200, height=700, relief='ridge',bg="black")
         self.canvas.place(x=0, y=0)
+        # Canvas donde se mostrara la info como el puntaje,vida,tiempo.nombre
         self.canvasdos = Canvas(self.master, width=1197, height=46, relief='ridge',bg="black")
         self.canvasdos.place(x=0, y=650)
+
+        # Funcion para cargar el gif frame por frame y hacer su animacion
         self.sequence = [ImageTk.PhotoImage(img)
                          for img in ImageSequence.Iterator(Image.open(r'clockword.gif'))]
         self.image = self.canvas.create_image(600,350, image=self.sequence[0])
@@ -433,7 +454,7 @@ class Pantalla_principal:
   
 
 
-
+        # Aqui se incia el reproductor de la musica de inicio
         pygame.init()
         pygame.mixer.music.load("JitaiKyuuhen-KarinNakanoSatoshiHono-5036133.mp3")
         pygame.mixer.music.play(4)
@@ -441,6 +462,8 @@ class Pantalla_principal:
         #boton de retorno a la pantalla de inicio
         self.boton_retorno2 = Button(self.canvasdos, text="back",font=("Comic Sans MS", 10),fg="red",bg="black",command=self.puntaje_superado)
         self.boton_retorno2.place(x=1149,y=3, width=50, height=20)
+
+        # Boton para silenciar
         self.mute = Button(self.canvasdos, text="Mute",font=("Comic Sans MS", 8),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=1149,y=20, width=50, height=20)
 
@@ -464,16 +487,18 @@ class Pantalla_principal:
         self.Nave2=ImageTk.PhotoImage(Image.open("nave.png"))
         self.nave_N2 = self.canvas.create_image(550,555,image=self.Nave2, anchor=NW)
 
-        #importa img de las balas de la nave y el enemigo
+        #Funcion para mostrar la barra de progresoo
         progreso = Progressbar(self.canvasdos, orient = HORIZONTAL,length = 100, mode = 'determinate')
         progreso.place(x=0,y=3)
 
         #variable y llamada a la funcion de cronometro
         self.segundos2=0
         
+        #impor img de los enemigos
         self.enemiga=ImageTk.PhotoImage(Image.open("enemigo.png"))
-        #llama a la funcion de colision
 
+        
+        # Funcion para el boton de silenciar
         global paused
         paused = False
         def parar_o_reanudar_musica(is_paused):
@@ -529,12 +554,14 @@ class Pantalla_principal:
         t2 = Thread(target= barra_de_progreso_2)
         t2.start()
 
-
+         # Funcion para que suene el choque de las balas
         def sonido_choquedos():
-            sonido_choquedos = pygame.mixer.Sound("golpe.mp3")
-            sonido_choquedos.play()
-
+            sonido_choquedos = pygame.mixer.Sound("golpe.mp3")#LLama ala musica
+            sonido_choquedos.play()# Reproduce
+            
+        # Funcion para el rebote de las balas
         def rebotedebalas():
+            #Generacion aleatoria
             ran = randint(0,795)
             randos = randint(0,795)
             rantres = randint(0,795)
@@ -556,9 +583,7 @@ class Pantalla_principal:
             rebotedebalas_aux(enemigocuatro,1,3)
             rebotedebalas_aux(enemigocinco,1,8)
 
-           
-            #self.canvas.after(100,rebotedebalas)
-
+        # Funcion para su movimiento aleatorio y la verificasion de colicion
         def rebotedebalas_aux(enemigo, x , y):
             area_nave = self.canvas.bbox(self.nave_N2)
             #daño caja boss
@@ -605,13 +630,19 @@ class Pantalla_principal:
                  self.canvas.delete(enemigo)
             self.canvas.after(10,lambda:rebotedebalas_aux(enemigo,x,y))
         rebotedebalas()
-
+        
+    # Tercer nivel
     def tercerNivel(self):
-        global no_dispare#global para detener el disparo del enemigo
+
+        # Canvas donde de mostrara el gif,nave,enemigos
         self.canvas = Canvas(self.master, width=1200, height=700, relief='ridge',bg="#1d2086")
         self.canvas.place(x=0, y=0)
+        # Canvas donde se mostrara la info como el puntaje,vida,tiempo.nombre
         self.canvasdos = Canvas(self.master, width=1197, height=46, relief='ridge',bg="black")
         self.canvasdos.place(x=0, y=650)
+
+
+        # Funcion para cargar el gif frame por frame y hacer su animacion
         self.sequence = [ImageTk.PhotoImage(img)
                          for img in ImageSequence.Iterator(Image.open(r'zafkiel.gif'))]
         self.image = self.canvas.create_image(600,350, image=self.sequence[0])
@@ -620,7 +651,8 @@ class Pantalla_principal:
             self.canvas.itemconfig(self.image, image=self.sequence[counter])
             self.canvas.after(120, lambda: animate((counter+1) % len(self.sequence)))
         animate(1)
-
+        
+        # Aqui se incia el reproductor de la musica de inicio
         pygame.init()
         pygame.mixer.music.load("ElectronicWarfare-KarinNakanoSatoshiHono-5036030.mp3")
         pygame.mixer.music.play(4)
@@ -640,7 +672,7 @@ class Pantalla_principal:
         self.vidanave3= Label(self.canvasdos,text="vida: 3",font=("Comic Sans MS", 10),fg="red",bg="black")
         self.vidanave3.place(x=100, y=3)
 
-        #nombre del jugador nivel 2
+        #nombre del jugador nivel 3
         self.nombreJugador_N3 = Label(self.canvasdos, text="", font=("Comic Sans MS", 10),fg="red",bg="black")
         self.nombreJugador_N3.place(x=400, y=3)
 
@@ -654,12 +686,18 @@ class Pantalla_principal:
 
 
 
-        #importa img de las balas de la nave y el enemigo
+        #Funcion para mostrar la barra de progreso
         progresoo = Progressbar(self.canvasdos, orient = HORIZONTAL,length = 100, mode = 'determinate')
         progresoo.place(x=0,y=3)
+
+        #impor img de los enemigos
         self.enemiga=ImageTk.PhotoImage(Image.open("enemigof.png"))
+
+        #varible y llamada a la función de cronometro
         self.segundos_N3=0
 
+
+        # Funcion para el boton de silenciar
         global paused
         paused = False
         def parar_o_reanudar_musica(is_paused):
@@ -701,7 +739,8 @@ class Pantalla_principal:
             except IndexError:#controla el error y elimina la bala del enemigo
                  self.canvas.move(self.nave_N3, 15, 0)
         self.master.bind("<KeyPress>", mover_nave3)#realiza el evento de mantener pulsada las teclas
-        
+
+        # Funcion para crear la barra de progreso
         def barra_de_progreso_3():
             Limite = 60
             Tiempo = 0
@@ -709,16 +748,21 @@ class Pantalla_principal:
             while(Tiempo<Limite):
                 time.sleep(1)
                 progresoo['value']+=(speed/Limite)*100
-                Tiempo+=speed
+                Tiempo+=speed # esto hace que avanse
                 window.update_idletasks()
         t3 = Thread(target= barra_de_progreso_3)
         t3.start()
 
+        # Funcion para que suene el choque de las balas
         def sonido_choquetres():
-            sonido_choquetres = pygame.mixer.Sound("Tic_Tac.mp3")
-            sonido_choquetres.play()
+            sonido_choquetres = pygame.mixer.Sound("Tic_Tac.mp3")#LLama ala musica
+            sonido_choquetres.play()# Reproduce
 
+
+            
+        # Funcion para el rebote de las balas
         def rebotedebalas():
+            #Generacion aleatoria
             ran = randint(0,100)
             randos = randint(0,700)
             rantres = randint(0,565)
@@ -742,9 +786,7 @@ class Pantalla_principal:
             rebotedebalas_aux(enemigocinco,1,2)
             rebotedebalas_aux(enemigoseis,1,8)
 
-
-            #self.canvas.after(100,rebotedebalas)
-
+        # Funcion para su movimiento aleatorio y la verificasion de colicion
         def rebotedebalas_aux(enemigo, x , y):
             area_nave = self.canvas.bbox(self.nave_N3)
             #daño caja boss
@@ -793,8 +835,7 @@ class Pantalla_principal:
 
 
     #verifica cuando el enemigo es derrotado y pasa al siguiente nivel
-    #verifica cuando el enemigo es derrotado y pasa al siguiente nivel
-    def jefe_derrotado(self):
+    def Nivel_Completado(self):
         global pasa
         global Nave
         global nombre
@@ -889,7 +930,7 @@ class Pantalla_principal:
         minutos_nivel_tres = 0
         minutos=0
         nombre=""
-        pygame.mixer.stop
+        pygame.mixer.stop# Para la musica
         self.canvas.destroy()
         self.pantallaInicio()
         
