@@ -59,7 +59,7 @@ class Pantalla_principal:
                 paused = True
 
         # Boton para silenciar
-        self.mute = Button(self.canvas, text="Mute",font=("Comic Sans MS", 5),bg="#b4b0f7",command = lambda:parar_o_reanudar_musica(paused))
+        self.mute = Button(self.canvas, text="Mute",font=("Comic Sans MS", 10),bg="#b4b0f7",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=550,y=670, width=80, height=30)
         
         #entrada de texto para el nombre
@@ -119,6 +119,7 @@ class Pantalla_principal:
 
         def separar(lista):
                 i = 0 #contador
+                print(lista)
                 nombres=[]
                 puntaje=[]
                 while i != 7:  
@@ -297,6 +298,7 @@ class Pantalla_principal:
             else:
                 pygame.mixer.music.pause()
                 paused = True
+                
         # Boton para silenciar
         self.mute = Button(self.canvasdos, text="Mute or UnMute",font=("Comic Sans MS", 5),fg="red",bg="black",command = lambda:parar_o_reanudar_musica(paused))
         self.mute.place(x=1149,y=20, width=50, height=20)
@@ -319,16 +321,17 @@ class Pantalla_principal:
                 minutos+=1
                 self.segundos=0
                 self.tiempo_nivel1.configure(text="tiempo: "+ str(minutos)+":"+str(self.segundos))#actualiza el tiempo
-                return self.jefe_derrotado()
+                return self.Nivel_Completado()
             self.tiempo_nivel1.configure(text="tiempo: "+str(minutos)+":"+ str(self.segundos))#actualiza el tiempo
             self.segundos += 1
             puntaje += 1
             self.puntaje.configure(text="puntaje: " + str(puntaje))
             self.canvas.after(1000,cronometro_N1)#repite la funcion cada segundo
         cronometro_N1()
+        
         # Funcion para que suene el choque de las balas
         def sonido_choque():
-            sonido_choque = pygame.mixer.Sound("golpe.mp3")#LLama ala musica
+            sonido_choque = pygame.mixer.Sound("golpe.mp3")#LLama a la musica
             sonido_choque.play()# Reproduce
             
         # Funcion para el rebote de las balas
@@ -353,7 +356,7 @@ class Pantalla_principal:
             rebotedebalas_aux(enemigocuatro,1,7)
 
         def rebotedebalas_aux(enemigo, x , y):
-            #daño caja dela nave
+            #daño caja de la nave
             area_nave = self.canvas.bbox(self.nave_N1)
             #daño caja del enemigo
             area_Misil = self.canvas.bbox(enemigo)
@@ -362,6 +365,7 @@ class Pantalla_principal:
             try:
                 # x es la gravedad
                 # y es la velocidad
+                
                 #Borde de arriba
                 if self.canvas.coords(enemigo)[1] < 0:
                         y = randint(5,7)
@@ -424,7 +428,7 @@ class Pantalla_principal:
             Limite = 60
             Tiempo = 0
             speed = 1
-            while(Tiempo<Limite and pasa):
+            while(Tiempo < Limite and pasa):
                 time.sleep(1)
                 progress["value"]+=(speed/Limite)*100
                 Tiempo+=speed # esto hace que avanse
@@ -518,7 +522,7 @@ class Pantalla_principal:
                 minutos_nivel_dos += 1
                 self.segundos2=0
                 self.tiempo_nivel2.configure(text="tiempo: "+ str(minutos_nivel_dos)+":"+str(self.segundos2))#actualiza el tiempo
-                return self.jefe_derrotado()
+                return self.Nivel_Completado()
             self.tiempo_nivel2.configure(text="tiempo: "+ str(minutos_nivel_dos)+":"+str(self.segundos2))#actualiza el tiempo
             self.segundos2 +=1
             puntaje += 3
@@ -717,7 +721,7 @@ class Pantalla_principal:
                 minutos_nivel_tres +=1#aumenta en 1 los minutos
                 self.segundos_N3=0
                 self.tiempo_N3.configure(text="tiempo "+ str(minutos_nivel_tres)+":"+str(self.segundos_N3))#actualiza los minutos y segundos
-                return self.jefe_derrotado()
+                return self.Nivel_Completado()
             self.tiempo_N3.configure(text="tiempo "+ str(minutos_nivel_tres)+":"+str(self.segundos_N3))#actualiza los segundos
             self.segundos_N3 +=1
             puntaje += 5
@@ -907,7 +911,6 @@ class Pantalla_principal:
 
     #funcion que obtiene la variable con los datos del nuevo top 7 y actualiza el archivo de texto con estos    
     def actualizar(self,nuevos):
-        print(nuevos)
         archivo = open("archivo.txt","w") 
         archivo.write(nuevos) 
         archivo.close()

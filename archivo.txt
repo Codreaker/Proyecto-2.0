@@ -2,6 +2,6 @@ fgh;551
 qwe;551
 asd;300
 asd;300
+zxc;140
 sd;95
 asd;80
-qwe;80
