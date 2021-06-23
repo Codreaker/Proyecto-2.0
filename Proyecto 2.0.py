@@ -423,18 +423,20 @@ class Pantalla_principal:
         
         # Funcion para crear la barra de progreso
         def barra_de_progreso():
-            global pasa
-            pasa = True
             Limite = 60
             Tiempo = 0
             speed = 1
+<<<<<<< Updated upstream
             while(Tiempo < Limite and pasa):
+=======
+            while(Tiempo<Limite):
+>>>>>>> Stashed changes
                 time.sleep(1)
-                progress["value"]+=(speed/Limite)*100
-                Tiempo+=speed # esto hace que avanse
-                window.update_idletasks()
-        t1 = Thread(target= barra_de_progreso)
-        t1.start()
+                progress['value']+=(speed/Limite)*100
+                Tiempo+=speed
+                self.canvasdos.update_idletasks()
+        t001 = Thread(target= barra_de_progreso)
+        t001.start()
 
         
     #segundo nivel del juego
